@@ -10,7 +10,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- ⭐ CSS нового шаблона обложки -->
+<!-- CSS нового шаблона обложки -->
 <link rel="stylesheet" href="templates/cover-01.css">
 
 <style>
@@ -179,6 +179,17 @@ button{font-family:inherit;cursor:pointer;}
   width:794px;height:1123px;background:#fff;position:relative;overflow:hidden;
   font-family:'Playfair Display',Georgia,'Times New Roman',serif;color:#111;
   flex:0 0 auto;
+}
+
+/* ---------- ⭐ Обложка VOGUE: inline-SVG для корректного PDF ---------- */
+.cv-decor-inline {
+  position: absolute;
+  top: 0; left: 0;
+  width: 794px;
+  height: 1123px;
+  z-index: 2;
+  pointer-events: none;
+  display: block;
 }
 
 /* ---------- Текстовая страница ---------- */
@@ -425,16 +436,59 @@ function show(id){
 }
 
 /* ================================================================
+   ⭐ INLINE SVG ОБЛОЖКИ (для корректного рендера в PDF)
+   ================================================================ */
+let COVER_SVG_INLINE = '';
+
+async function preloadCoverSvg() {
+  if (COVER_SVG_INLINE) return COVER_SVG_INLINE;
+
+  const paths = ['templates/cover-01.svg', 'cover-01.svg'];
+  let svg = '';
+
+  for (const p of paths) {
+    try {
+      const res = await fetch(p);
+      if (!res.ok) continue;
+      svg = await res.text();
+      break;
+    } catch (e) { /* пробуем следующий путь */ }
+  }
+
+  if (!svg) {
+    console.error('Не удалось загрузить SVG обложки. Проверь путь templates/cover-01.svg');
+    return '';
+  }
+
+  // Убираем width/height у корневого <svg>, добавляем класс и viewBox-fallback
+  svg = svg.replace(/<svg([^>]*)>/, (m, attrs) => {
+    let a = attrs
+      .replace(/\swidth="[^"]*"/g, '')
+      .replace(/\sheight="[^"]*"/g, '');
+    // Если нет viewBox — добавим
+    if (!/viewBox=/.test(a)) {
+      a += ' viewBox="0 0 2481 3507"';
+    }
+    a += ' class="cv-decor-inline" preserveAspectRatio="xMidYMid meet"';
+    return '<svg' + a + '>';
+  });
+
+  COVER_SVG_INLINE = svg;
+  return svg;
+}
+
+/* ================================================================
    ГЕНЕРАЦИЯ HTML СТРАНИЦ
    ================================================================ */
 
-/* ⭐ НОВАЯ ОБЛОЖКА НА БАЗЕ SVG ИЗ FIGMA ⭐ */
+/* ⭐ ОБЛОЖКА VOGUE — SVG вставляется как inline */
 function pageCover(){
   const c = state.cover;
-  const photoStyle = c.photo ? 'background-image:url(\''+c.photo+'\')' : '';
+  const photoStyle = c.photo ? `background-image:url('${c.photo}')` : '';
+  const decor = COVER_SVG_INLINE || '';
   return '<div class="page cover-vogue">'
     +   '<div class="cv-photo" style="'+photoStyle+'"></div>'
-    +   '<img src="templates/cover-01.svg" class="cv-decor" alt="">'
+    +   decor
     +   '<div class="cv-name">'+ esc(c.name) +'</div>'
     +   '<div class="cv-text-left">'+ esc(c.leftText) +'</div>'
     +   '<div class="cv-text-right cv-text-right--love">'
@@ -833,7 +887,8 @@ $('#btn-start').addEventListener('click', function(){
 
 $('#btn-back-1').addEventListener('click', function(){ show('screen-start'); });
 
-$('#btn-to-editor').addEventListener('click', function(){
+$('#btn-to-editor').addEventListener('click', async function(){
+  await preloadCoverSvg();
   initSpreads();
   renderControls();
   renderPreview();
@@ -858,6 +913,9 @@ async function downloadPDF(){
   btn.disabled = true;
   status.textContent = 'Подготовка…';
   holder.innerHTML = '';
+
+  // На всякий случай убедимся, что SVG загружен
+  await preloadCoverSvg();
 
   const pagesHTML = buildPages();
   const nodes = pagesHTML.map(function(h){
@@ -911,6 +969,10 @@ async function downloadPDF(){
    СТАРТ
    ================================================================ */
 initSpreads();
+
+/* Предзагружаем SVG обложки при старте — чтобы к моменту рендера
+   он уже был inline и корректно попал в PDF */
+preloadCoverSvg();
 </script>
 </body>
 </html>
