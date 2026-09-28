@@ -9,6 +9,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- ⭐ CSS нового шаблона обложки -->
+<link rel="stylesheet" href="templates/cover-01.css">
+
 <style>
 /* ============ БАЗА ============ */
 :root{
@@ -177,41 +181,6 @@ button{font-family:inherit;cursor:pointer;}
   flex:0 0 auto;
 }
 
-/* ---------- Обложка ---------- */
-.page.cover{background:#111;}
-.cover-bg{position:absolute;inset:0;background-size:cover;background-position:center;}
-.cover-bg--empty{background:linear-gradient(160deg,#2e2e2e 0%,#141414 55%,#000 100%);}
-.cover-shade{
-  position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 34%,rgba(0,0,0,0) 48%,rgba(0,0,0,.66) 100%);
-}
-.cover-content{position:absolute;inset:0;display:flex;flex-direction:column;padding:38px 44px 54px;color:#fff;}
-.cover-issue{
-  font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:.42em;
-  text-align:center;text-transform:uppercase;opacity:.94;
-}
-.cover-masthead{
-  font-family:'Playfair Display',serif;font-weight:700;font-size:126px;line-height:1;
-  letter-spacing:.05em;text-align:center;margin-top:8px;
-}
-.cover-bottom{margin-top:auto;text-align:center;}
-.cover-rule{width:70px;height:1px;background:rgba(255,255,255,.72);margin:0 auto 24px;}
-.cover-name{font-size:38px;letter-spacing:.14em;text-transform:uppercase;font-weight:400;}
-.cover-sub{
-  font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.34em;
-  text-transform:uppercase;margin-top:16px;opacity:.86;
-}
-
-/* ---------- Фото на всю страницу ---------- */
-.full-photo{position:absolute;inset:0;background-size:cover;background-position:center;background-color:#eae6df;}
-.full-photo.empty{
-  background:#e9e5de;display:flex;align-items:center;justify-content:center;
-}
-.full-photo.empty span{
-  font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.4em;
-  text-transform:uppercase;color:#b8b0a4;
-}
-
 /* ---------- Текстовая страница ---------- */
 .page--text{padding:96px 78px;display:flex;flex-direction:column;}
 .kicker{
@@ -232,6 +201,16 @@ button{font-family:inherit;cursor:pointer;}
   letter-spacing:.3em;color:#b8b1a6;text-transform:uppercase;
 }
 .folio--light{color:rgba(255,255,255,.34);}
+
+/* ---------- Фото на всю страницу ---------- */
+.full-photo{position:absolute;inset:0;background-size:cover;background-position:center;background-color:#eae6df;}
+.full-photo.empty{
+  background:#e9e5de;display:flex;align-items:center;justify-content:center;
+}
+.full-photo.empty span{
+  font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.4em;
+  text-transform:uppercase;color:#b8b0a4;
+}
 
 /* ---------- Цитата ---------- */
 .page--quote{
@@ -349,51 +328,51 @@ const ZODIAC = {
   aries:{name:'Овен',sym:'♈',dates:'21 марта — 19 апреля',el:'Огонь',pl:'Марс',
     color:'Алый',stone:'Рубин',nums:'1 · 9 · 19',
     traits:['Смелость','Инициатива','Прямота','Энергия'],
-    text:'Овен открывает зодиакальный круг, и в этом — его сила. Вы не ждёте подходящего момента, вы его создаёте. Прямота, которую окружающие иногда принимают за резкость, на самом деле — редкая честность. Ваша задача — научиться направлять огонь, а не гасить его.'},
+    text:'Овен открывает зодиакальный круг, и в этом — его сила. Вы не ждёте подходящего момента, вы его создаёте.'},
   taurus:{name:'Телец',sym:'♉',dates:'20 апреля — 20 мая',el:'Земля',pl:'Венера',
     color:'Изумрудный',stone:'Изумруд',nums:'2 · 6 · 15',
     traits:['Надёжность','Чувственность','Терпение','Вкус'],
-    text:'Телец знает цену вещам и времени. Вы не спешите — и потому почти никогда не ошибаетесь в главном. Ваша сила в умении создавать устойчивый мир вокруг себя: дом, дело, отношения. Позвольте себе иногда меняться — и устойчивость станет опорой, а не клеткой.'},
+    text:'Телец знает цену вещам и времени. Вы не спешите — и потому почти никогда не ошибаетесь в главном.'},
   gemini:{name:'Близнецы',sym:'♊',dates:'21 мая — 20 июня',el:'Воздух',pl:'Меркурий',
     color:'Жёлтый',stone:'Агат',nums:'3 · 5 · 12',
     traits:['Любознательность','Остроумие','Лёгкость','Контакт'],
-    text:'Близнецы — знак движения мысли. Вы легко находите общий язык с кем угодно и умеете видеть ситуацию с двух сторон одновременно. Ваша задача — не распыляться: выбрать одно из тысячи «интересно» и довести его до глубины.'},
+    text:'Близнецы — знак движения мысли. Вы легко находите общий язык с кем угодно.'},
   cancer:{name:'Рак',sym:'♋',dates:'21 июня — 22 июля',el:'Вода',pl:'Луна',
     color:'Серебристый',stone:'Жемчуг',nums:'2 · 7 · 16',
     traits:['Забота','Интуиция','Память','Дом'],
-    text:'Рак помнит всё — и хорошее, и трудное. Ваша чувствительность — не слабость, а точный инструмент. Вы создаёте пространство, в которое хочется возвращаться. Учитесь защищать свои границы так же бережно, как вы защищаете близких.'},
+    text:'Рак помнит всё — и хорошее, и трудное. Ваша чувствительность — не слабость, а точный инструмент.'},
   leo:{name:'Лев',sym:'♌',dates:'23 июля — 22 августа',el:'Огонь',pl:'Солнце',
     color:'Золотой',stone:'Янтарь',nums:'1 · 4 · 10',
     traits:['Щедрость','Харизма','Творчество','Великодушие'],
-    text:'Лев — знак солнца и щедрости. Вы умеете быть в центре, не отнимая света у других. Творчество, великодушие и вкус к жизни — ваши природные инструменты. Не бойтесь просить признания: вам действительно есть что показать.'},
+    text:'Лев — знак солнца и щедрости. Вы умеете быть в центре, не отнимая света у других.'},
   virgo:{name:'Дева',sym:'♍',dates:'23 августа — 22 сентября',el:'Земля',pl:'Меркурий',
     color:'Бежевый',stone:'Нефрит',nums:'5 · 14 · 23',
     traits:['Точность','Анализ','Забота','Мастерство'],
-    text:'Дева видит детали, которые ускользают от остальных. Ваша аккуратность — это форма заботы о мире. Но помните: совершенство не требует жертв. Разрешите себе неидеальность — и вы освободите огромную энергию.'},
+    text:'Дева видит детали, которые ускользают от остальных. Ваша аккуратность — это форма заботы о мире.'},
   libra:{name:'Весы',sym:'♎',dates:'23 сентября — 22 октября',el:'Воздух',pl:'Венера',
     color:'Розовый',stone:'Опал',nums:'6 · 15 · 24',
     traits:['Гармония','Эстетика','Дипломатия','Такт'],
-    text:'Весы ищут равновесие и умеют создавать красоту вокруг себя. Вы прирождённый дипломат: там, где другие спорят, вы находите общий язык. Главное — не терять собственные желания в поиске гармонии для всех.'},
+    text:'Весы ищут равновесие и умеют создавать красоту вокруг себя. Вы прирождённый дипломат.'},
   scorpio:{name:'Скорпион',sym:'♏',dates:'23 октября — 21 ноября',el:'Вода',pl:'Плутон',
     color:'Чёрный',stone:'Топаз',nums:'4 · 13 · 22',
     traits:['Глубина','Страсть','Проницательность','Воля'],
-    text:'Скорпион — знак глубины и трансформации. Вы не интересуетесь поверхностным: вам нужна суть. Ваша интуиция почти никогда не ошибается. Перемена, которой вы боитесь, обычно и есть та, что ведёт вперёд.'},
+    text:'Скорпион — знак глубины и трансформации. Вы не интересуетесь поверхностным: вам нужна суть.'},
   sagittarius:{name:'Стрелец',sym:'♐',dates:'22 ноября — 21 декабря',el:'Огонь',pl:'Юпитер',
     color:'Синий',stone:'Бирюза',nums:'3 · 9 · 21',
     traits:['Свобода','Оптимизм','Горизонт','Поиск'],
-    text:'Стрелец — знак горизонта. Вам нужен простор: в мыслях, в дорогах, в планах. Ваш оптимизм — не наивность, а стратегия. Только не забывайте, что настоящая свобода начинается там, где есть точка опоры.'},
+    text:'Стрелец — знак горизонта. Вам нужен простор: в мыслях, в дорогах, в планах.'},
   capricorn:{name:'Козерог',sym:'♑',dates:'22 декабря — 19 января',el:'Земля',pl:'Сатурн',
     color:'Графитовый',stone:'Оникс',nums:'8 · 10 · 26',
     traits:['Целеустремлённость','Стойкость','Стратегия','Дисциплина'],
-    text:'Козерог строит вдолгую. Вы умеете отказывать себе сегодня, чтобы получить больше завтра. Ваша сдержанность часто скрывает сильные чувства. Позвольте себе иногда отдыхать — вершина никуда не денется.'},
+    text:'Козерог строит вдолгую. Вы умеете отказывать себе сегодня, чтобы получить больше завтра.'},
   aquarius:{name:'Водолей',sym:'♒',dates:'20 января — 18 февраля',el:'Воздух',pl:'Уран',
     color:'Бирюзовый',stone:'Аквамарин',nums:'4 · 11 · 29',
     traits:['Оригинальность','Свобода мысли','Дружба','Новаторство'],
-    text:'Водолей смотрит на мир со стороны — и потому видит то, что другие пропускают. Вы прирождённый новатор и друг для многих. Ваша задача — соединить оригинальность мысли с теплом обычного человеческого присутствия.'},
+    text:'Водолей смотрит на мир со стороны — и потому видит то, что другие пропускают.'},
   pisces:{name:'Рыбы',sym:'♓',dates:'19 февраля — 20 марта',el:'Вода',pl:'Нептун',
     color:'Морской',stone:'Аквамарин',nums:'7 · 12 · 30',
     traits:['Воображение','Сочувствие','Мягкость','Мечта'],
-    text:'Рыбы — знак воображения и сочувствия. Вы чувствуете настроение комнаты раньше, чем кто-либо произнесёт слово. Ваша интуиция — компас. Осталось только научиться отделять собственные желания от чужих.'}
+    text:'Рыбы — знак воображения и сочувствия. Вы чувствуете настроение комнаты раньше, чем кто-либо произнесёт слово.'}
 };
 const ZODIAC_ORDER = ['aries','taurus','gemini','cancer','leo','virgo','libra','scorpio','sagittarius','capricorn','aquarius','pisces'];
 
@@ -402,7 +381,17 @@ const ZODIAC_ORDER = ['aries','taurus','gemini','cancer','leo','virgo','libra','
    ================================================================ */
 const state = {
   pageCount: 12,
-  cover: {photo:null, name:'', sub:'', issue:''},
+  cover: {
+    photo:null,
+    name:'ULIANA',
+    sub:'персональный выпуск',
+    issue:'Спецвыпуск · Личное издание',
+    leftText:'If she loves, she loves with all her heart. She is loyal to her loved ones and will never betray them',
+    loveHead:'Love',
+    loveBody:"Love is her everything. And that's all we know about her",
+    lifeHead:'Life',
+    lifeBody:'Her life is an ocean filled with love, care, and happiness.'
+  },
   spreads: []
 };
 
@@ -438,30 +427,30 @@ function show(id){
 /* ================================================================
    ГЕНЕРАЦИЯ HTML СТРАНИЦ
    ================================================================ */
-function photoDiv(src, cls){
-  cls = cls || '';
-  if(src) return '<div class="full-photo '+cls+'" style="background-image:url(\''+src+'\')"></div>';
-  return '<div class="full-photo empty '+cls+'"><span>Фото</span></div>';
-}
 
+/* ⭐ НОВАЯ ОБЛОЖКА НА БАЗЕ SVG ИЗ FIGMA ⭐ */
 function pageCover(){
   const c = state.cover;
-  const bg = c.photo
-    ? '<div class="cover-bg" style="background-image:url(\''+c.photo+'\')"></div>'
-    : '<div class="cover-bg cover-bg--empty"></div>';
-  return '<div class="page cover">'
-    + bg
-    + '<div class="cover-shade"></div>'
-    + '<div class="cover-content">'
-    +   '<div class="cover-issue">'+ (esc(c.issue) || 'Спецвыпуск · Личное издание') +'</div>'
-    +   '<div class="cover-masthead">VOGUE</div>'
-    +   '<div class="cover-bottom">'
-    +     '<div class="cover-rule"></div>'
-    +     '<div class="cover-name">'+ (esc(c.name) || 'Имя Фамилия') +'</div>'
-    +     '<div class="cover-sub">'+ (esc(c.sub) || 'персональный выпуск') +'</div>'
+  const photoStyle = c.photo ? 'background-image:url(\''+c.photo+'\')' : '';
+  return '<div class="page cover-vogue">'
+    +   '<div class="cv-photo" style="'+photoStyle+'"></div>'
+    +   '<img src="templates/cover-01.svg" class="cv-decor" alt="">'
+    +   '<div class="cv-name">'+ esc(c.name) +'</div>'
+    +   '<div class="cv-text-left">'+ esc(c.leftText) +'</div>'
+    +   '<div class="cv-text-right cv-text-right--love">'
+    +     '<h3>'+ esc(c.loveHead) +'</h3>'
+    +     '<p>'+ esc(c.loveBody) +'</p>'
     +   '</div>'
-    + '</div>'
+    +   '<div class="cv-text-right cv-text-right--life">'
+    +     '<h3>'+ esc(c.lifeHead) +'</h3>'
+    +     '<p>'+ esc(c.lifeBody) +'</p>'
+    +   '</div>'
     + '</div>';
+}
+
+function photoDiv(src){
+  if(src) return '<div class="full-photo" style="background-image:url(\''+src+'\')"></div>';
+  return '<div class="full-photo empty"><span>Фото</span></div>';
 }
 
 function textPage(sp, no){
@@ -605,15 +594,9 @@ function textFieldsHTML(sp){
 
 function fieldsHTML(sp){
   const t = sp.tpl;
-  if(t === 'photo-text'){
-    return photoField(sp,'a','Фото — левая страница') + textFieldsHTML(sp);
-  }
-  if(t === 'text-photo'){
-    return photoField(sp,'b','Фото — правая страница') + textFieldsHTML(sp);
-  }
-  if(t === 'photo-photo'){
-    return photoField(sp,'a','Фото — левая страница') + photoField(sp,'b','Фото — правая страница');
-  }
+  if(t === 'photo-text') return photoField(sp,'a','Фото — левая страница') + textFieldsHTML(sp);
+  if(t === 'text-photo') return photoField(sp,'b','Фото — правая страница') + textFieldsHTML(sp);
+  if(t === 'photo-photo') return photoField(sp,'a','Фото — левая страница') + photoField(sp,'b','Фото — правая страница');
   if(t === 'quote-photo'){
     return '<label class="field"><span>Цитата</span>'
       + '<textarea data-act="heading" rows="4" placeholder="Красота — это то, что вы делаете каждый день">'+esc(sp.heading)+'</textarea></label>'
@@ -638,7 +621,7 @@ function coverCard(){
   const el = document.createElement('div');
   el.className = 'card';
   el.innerHTML =
-    '<div class="card-head"><span class="card-title">Обложка</span><span class="card-pages">Стр. 1</span></div>'
+    '<div class="card-head"><span class="card-title">Обложка · VOGUE Classic</span><span class="card-pages">Стр. 1</span></div>'
     + '<div class="card-body">'
     +   '<div class="field"><span>Фотография обложки</span>'
     +     '<div class="file-row">'
@@ -649,11 +632,17 @@ function coverCard(){
     +     '</div>'
     +   '</div>'
     +   '<label class="field"><span>Имя на обложке</span>'
-    +     '<input type="text" data-cover="name" value="'+esc(c.name)+'" placeholder="Анна Соколова"></label>'
-    +   '<label class="field"><span>Подзаголовок</span>'
-    +     '<input type="text" data-cover="sub" value="'+esc(c.sub)+'" placeholder="персональный выпуск"></label>'
-    +   '<label class="field"><span>Надпись сверху</span>'
-    +     '<input type="text" data-cover="issue" value="'+esc(c.issue)+'" placeholder="Спецвыпуск · Личное издание"></label>'
+    +     '<input type="text" data-cover="name" value="'+esc(c.name)+'" placeholder="ULIANA"></label>'
+    +   '<label class="field"><span>Левый блок (курсив)</span>'
+    +     '<textarea data-cover="leftText" rows="4">'+esc(c.leftText)+'</textarea></label>'
+    +   '<label class="field"><span>Love · заголовок</span>'
+    +     '<input type="text" data-cover="loveHead" value="'+esc(c.loveHead)+'"></label>'
+    +   '<label class="field"><span>Love · текст</span>'
+    +     '<textarea data-cover="loveBody" rows="3">'+esc(c.loveBody)+'</textarea></label>'
+    +   '<label class="field"><span>Life · заголовок</span>'
+    +     '<input type="text" data-cover="lifeHead" value="'+esc(c.lifeHead)+'"></label>'
+    +   '<label class="field"><span>Life · текст</span>'
+    +     '<textarea data-cover="lifeBody" rows="3">'+esc(c.lifeBody)+'</textarea></label>'
     + '</div>';
   return el;
 }
@@ -879,7 +868,7 @@ async function downloadPDF(){
     return node;
   });
 
-  await new Promise(function(r){ setTimeout(r, 350); });
+  await new Promise(function(r){ setTimeout(r, 500); });
 
   const jsPDFCtor = window.jspdf.jsPDF;
   const pdf = new jsPDFCtor({unit:'mm', format:'a4', orientation:'portrait', compress:true});
