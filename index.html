@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VOGUE Personal — конструктор личного журнала</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ============ БАЗА ============ */
+:root{
+  --ink:#111;
+  --muted:#8a8378;
+  --paper:#f6f4f0;
+  --line:#e3ddd3;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.screen{display:none;}
+.screen.active{display:block;}
+button{font-family:inherit;cursor:pointer;}
+
+/* ============ КНОПКИ ============ */
+.btn{
+  border:none;border-radius:100px;padding:15px 34px;font-size:12px;
+  letter-spacing:.22em;text-transform:uppercase;font-weight:500;transition:.2s;
+}
+.btn--primary{background:#111;color:#fff;}
+.btn--primary:hover{background:#333;}
+.btn--primary:disabled{opacity:.45;cursor:wait;}
+.btn--ghost{background:transparent;color:#111;border:1px solid #cfc8bd;}
+.btn--ghost:hover{background:#fff;}
+
+/* ============ СТАРТОВЫЕ ЭКРАНЫ ============ */
+.center-wrap{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:60px 24px;
+}
+.brand{
+  font-family:'Playfair Display',serif;font-size:34px;font-weight:700;
+  letter-spacing:.34em;margin-bottom:34px;
+}
+.center-wrap h1{
+  font-family:'Playfair Display',serif;font-size:52px;font-weight:500;
+  margin:0 0 20px;letter-spacing:-.01em;line-height:1.1;
+}
+.center-wrap p{
+  max-width:520px;font-size:15px;line-height:1.75;color:#6f6862;margin:0 0 40px;
+}
+.step{
+  font-size:11px;letter-spacing:.36em;text-transform:uppercase;
+  color:#a49c90;margin-bottom:22px;
+}
+
+/* ============ ВЫБОР СТРАНИЦ ============ */
+.page-options{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:640px;margin-bottom:42px;
+}
+.page-opt{
+  width:108px;padding:18px 8px;background:#fff;border:1px solid var(--line);
+  border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:6px;
+  transition:.18s;
+}
+.page-opt:hover{border-color:#b8b0a3;transform:translateY(-2px);}
+.page-opt.active{border-color:#111;background:#111;color:#fff;}
+.page-opt b{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;}
+.page-opt span{font-size:9px;letter-spacing:.16em;text-transform:uppercase;opacity:.65;}
+.nav-row{display:flex;gap:14px;}
+
+/* ============ РЕДАКТОР ============ */
+.topbar{
+  position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:22px;
+  padding:14px 28px;background:rgba(246,244,240,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+}
+.topbar-brand{font-family:'Playfair Display',serif;font-size:21px;letter-spacing:.22em;font-weight:700;}
+.topbar-brand span{
+  font-family:'Inter',sans-serif;font-size:9px;letter-spacing:.3em;
+  color:#a49c90;margin-left:8px;vertical-align:middle;
+}
+.topbar-info{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a8378;}
+.topbar-actions{margin-left:auto;display:flex;gap:10px;}
+.topbar .btn{padding:11px 24px;font-size:11px;}
+
+.editor-layout{
+  display:flex;align-items:flex-start;gap:28px;padding:28px;
+  max-width:1520px;margin:0 auto;
+}
+.controls{flex:1;min-width:0;display:flex;flex-direction:column;gap:16px;}
+
+.card{
+  background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+}
+.card-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:15px 20px;background:#fbfaf8;border-bottom:1px solid #f0ece5;
+}
+.card-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;letter-spacing:.02em;}
+.card-pages{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#a49c90;}
+.card-body{padding:20px;display:flex;flex-direction:column;gap:16px;}
+
+.field{display:flex;flex-direction:column;gap:8px;}
+.field > span{
+  font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#8a8378;font-weight:500;
+}
+.field input[type=text], .field textarea, .field select{
+  width:100%;border:1px solid #e2ddd3;border-radius:9px;padding:12px 14px;
+  font-family:inherit;font-size:14px;color:#111;background:#fdfcfb;resize:vertical;
+  transition:.15s;
+}
+.field input[type=text]:focus, .field textarea:focus, .field select:focus{
+  outline:none;border-color:#111;background:#fff;
+}
+.field textarea{line-height:1.6;}
+
+.file-row{display:flex;gap:10px;align-items:center;}
+.file-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:11px 22px;border:1px dashed #cfc8bd;border-radius:9px;
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#6f6862;
+  cursor:pointer;transition:.18s;background:#fdfcfb;
+}
+.file-btn:hover{border-color:#111;color:#111;background:#fff;}
+.mini-btn{
+  background:transparent;border:none;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:#b04a3a;padding:8px 4px;
+}
+.mini-btn:hover{text-decoration:underline;}
+.hint{
+  font-size:12px;line-height:1.7;color:#8a8378;margin:0;
+  padding:12px 14px;background:#faf8f4;border-radius:9px;
+}
+
+/* ============ ПРЕДПРОСМОТР ============ */
+.preview-col{
+  width:452px;flex:0 0 452px;position:sticky;top:84px;
+  max-height:calc(100vh - 112px);display:flex;flex-direction:column;
+  background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
+}
+.preview-head{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:14px 18px;border-bottom:1px solid #f0ece5;
+  font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#8a8378;
+}
+#pdf-status{color:#111;letter-spacing:.1em;text-transform:none;font-size:11px;}
+.preview{
+  overflow-y:auto;padding:18px;display:flex;flex-wrap:wrap;gap:14px;
+  justify-content:center;align-content:flex-start;
+}
+.thumb{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.thumb-inner{
+  width:175px;height:247px;overflow:hidden;background:#fff;
+  box-shadow:0 6px 18px rgba(0,0,0,.13);border-radius:2px;
+}
+.thumb-scaler{transform:scale(.22);transform-origin:top left;width:794px;height:1123px;}
+.thumb-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#a49c90;}
+
+@media(max-width:1200px){
+  .editor-layout{flex-direction:column;}
+  .preview-col{width:100%;flex:none;position:static;max-height:none;}
+}
+
+/* ================================================================
+   СТРАНИЦА A4  (794 x 1123 px ≈ 210 x 297 мм)
+   ================================================================ */
+.page{
+  width:794px;height:1123px;background:#fff;position:relative;overflow:hidden;
+  font-family:'Playfair Display',Georgia,'Times New Roman',serif;color:#111;
+  flex:0 0 auto;
+}
+
+/* ---------- Обложка ---------- */
+.page.cover{background:#111;}
+.cover-bg{position:absolute;inset:0;background-size:cover;background-position:center;}
+.cover-bg--empty{background:linear-gradient(160deg,#2e2e2e 0%,#141414 55%,#000 100%);}
+.cover-shade{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,0) 34%,rgba(0,0,0,0) 48%,rgba(0,0,0,.66) 100%);
+}
+.cover-content{position:absolute;inset:0;display:flex;flex-direction:column;padding:38px 44px 54px;color:#fff;}
+.cover-issue{
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:.42em;
+  text-align:center;text-transform:uppercase;opacity:.94;
+}
+.cover-masthead{
+  font-family:'Playfair Display',serif;font-weight:700;font-size:126px;line-height:1;
+  letter-spacing:.05em;text-align:center;margin-top:8px;
+}
+.cover-bottom{margin-top:auto;text-align:center;}
+.cover-rule{width:70px;height:1px;background:rgba(255,255,255,.72);margin:0 auto 24px;}
+.cover-name{font-size:38px;letter-spacing:.14em;text-transform:uppercase;font-weight:400;}
+.cover-sub{
+  font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.34em;
+  text-transform:uppercase;margin-top:16px;opacity:.86;
+}
+
+/* ---------- Фото на всю страницу ---------- */
+.full-photo{position:absolute;inset:0;background-size:cover;background-position:center;background-color:#eae6df;}
+.full-photo.empty{
+  background:#e9e5de;display:flex;align-items:center;justify-content:center;
+}
+.full-photo.empty span{
+  font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.4em;
+  text-transform:uppercase;color:#b8b0a4;
+}
+
+/* ---------- Текстовая страница ---------- */
+.page--text{padding:96px 78px;display:flex;flex-direction:column;}
+.kicker{
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:.36em;
+  text-transform:uppercase;color:#9a9287;margin-bottom:28px;
+}
+.headline{
+  font-size:58px;line-height:1.05;font-weight:500;margin:0 0 30px;letter-spacing:-.015em;
+}
+.rule{width:64px;height:1px;background:#111;margin-bottom:34px;flex:0 0 auto;}
+.body{
+  font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.82;
+  color:#2b2b2b;text-align:justify;
+}
+.folio{
+  position:absolute;left:78px;right:78px;bottom:48px;display:flex;
+  justify-content:space-between;font-family:'Inter',sans-serif;font-size:10px;
+  letter-spacing:.3em;color:#b8b1a6;text-transform:uppercase;
+}
+.folio--light{color:rgba(255,255,255,.34);}
+
+/* ---------- Цитата ---------- */
+.page--quote{
+  padding:150px 90px;display:flex;flex-direction:column;justify-content:center;background:#f3f0eb;
+}
+.quote-mark{font-size:150px;line-height:.55;color:#cdc5b7;margin-bottom:26px;font-family:'Playfair Display',serif;}
+.quote-text{font-size:46px;line-height:1.26;font-style:italic;font-weight:400;}
+.quote-author{
+  font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.3em;
+  text-transform:uppercase;color:#8a8378;margin-top:40px;
+}
+
+/* ---------- Зодиак: левая страница ---------- */
+.page--zodiac-left{
+  background:#0f0f10;color:#fff;padding:78px 70px;display:flex;flex-direction:column;
+}
+.z-kicker{
+  font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.42em;
+  text-transform:uppercase;color:#8d8577;
+}
+.z-sym{font-size:154px;line-height:1;margin-top:52px;color:#d9c9a3;}
+.z-name{font-size:74px;letter-spacing:.05em;text-transform:uppercase;margin-top:6px;line-height:1;}
+.z-dates{
+  font-family:'Inter',sans-serif;font-size:13px;letter-spacing:.26em;
+  color:#a49a8a;margin-top:16px;
+}
+.z-info{margin-top:auto;border-top:1px solid rgba(255,255,255,.16);padding-top:22px;}
+.z-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.12em;
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);
+}
+.z-row span{color:#8d8577;text-transform:uppercase;font-size:10px;letter-spacing:.24em;}
+.z-row b{font-weight:500;color:#fff;font-family:'Playfair Display',serif;font-size:17px;letter-spacing:.02em;}
+
+/* ---------- Зодиак: правая страница ---------- */
+.z-traits{display:flex;flex-wrap:wrap;gap:10px;margin-top:38px;}
+.z-traits span{
+  font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;border:1px solid #d8d2c8;border-radius:100px;
+  padding:10px 18px;color:#6f6862;
+}
+
+/* ---------- Задняя обложка ---------- */
+.page--back{
+  background:#0f0f10;color:#fff;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.back-masthead{font-size:64px;letter-spacing:.3em;font-weight:700;}
+.back-text{
+  font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.34em;
+  text-transform:uppercase;color:#8d8577;margin-top:30px;text-align:center;line-height:2.2;
+}
+
+/* ---------- Контейнер для рендера PDF ---------- */
+#render-holder{position:absolute;left:-20000px;top:0;width:794px;}
+</style>
+</head>
+<body>
+
+<!-- ================= ЭКРАН 1: СТАРТ ================= -->
+<section id="screen-start" class="screen active">
+  <div class="center-wrap">
+    <div class="brand">VOGUE</div>
+    <h1>Ваш личный журнал</h1>
+    <p>Соберите персональный выпуск: выберите количество страниц, загрузите фотографии, добавьте текст и получите готовый PDF — каждый лист формата A4.</p>
+    <button class="btn btn--primary" id="btn-start">Создать журнал</button>
+  </div>
+</section>
+
+<!-- ================= ЭКРАН 2: КОЛИЧЕСТВО СТРАНИЦ ================= -->
+<section id="screen-pages" class="screen">
+  <div class="center-wrap">
+    <div class="step">Шаг 2 из 3</div>
+    <h1>Сколько страниц?</h1>
+    <p>Количество страниц должно быть кратно четырём — это требование печати. Первая страница — обложка, последняя — задняя обложка, остальные формируют развороты по два листа A4.</p>
+    <div class="page-options" id="page-options"></div>
+    <div class="nav-row">
+      <button class="btn btn--ghost" id="btn-back-1">Назад</button>
+      <button class="btn btn--primary" id="btn-to-editor">Продолжить</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ЭКРАН 3: РЕДАКТОР ================= -->
+<section id="screen-editor" class="screen">
+  <header class="topbar">
+    <div class="topbar-brand">VOGUE <span>PERSONAL</span></div>
+    <div class="topbar-info" id="topbar-info"></div>
+    <div class="topbar-actions">
+      <button class="btn btn--ghost" id="btn-back-2">Назад</button>
+      <button class="btn btn--primary" id="btn-pdf">Скачать PDF</button>
+    </div>
+  </header>
+
+  <div class="editor-layout">
+    <div class="controls" id="controls"></div>
+    <aside class="preview-col">
+      <div class="preview-head">
+        <span>Предпросмотр</span>
+        <span id="pdf-status"></span>
+      </div>
+      <div class="preview" id="preview"></div>
+    </aside>
+  </div>
+</section>
+
+<div id="render-holder"></div>
+
+<script>
+/* ================================================================
+   ДАННЫЕ ЗОДИАКА
+   ================================================================ */
+const ZODIAC = {
+  aries:{name:'Овен',sym:'♈',dates:'21 марта — 19 апреля',el:'Огонь',pl:'Марс',
+    color:'Алый',stone:'Рубин',nums:'1 · 9 · 19',
+    traits:['Смелость','Инициатива','Прямота','Энергия'],
+    text:'Овен открывает зодиакальный круг, и в этом — его сила. Вы не ждёте подходящего момента, вы его создаёте. Прямота, которую окружающие иногда принимают за резкость, на самом деле — редкая честность. Ваша задача — научиться направлять огонь, а не гасить его.'},
+  taurus:{name:'Телец',sym:'♉',dates:'20 апреля — 20 мая',el:'Земля',pl:'Венера',
+    color:'Изумрудный',stone:'Изумруд',nums:'2 · 6 · 15',
+    traits:['Надёжность','Чувственность','Терпение','Вкус'],
+    text:'Телец знает цену вещам и времени. Вы не спешите — и потому почти никогда не ошибаетесь в главном. Ваша сила в умении создавать устойчивый мир вокруг себя: дом, дело, отношения. Позвольте себе иногда меняться — и устойчивость станет опорой, а не клеткой.'},
+  gemini:{name:'Близнецы',sym:'♊',dates:'21 мая — 20 июня',el:'Воздух',pl:'Меркурий',
+    color:'Жёлтый',stone:'Агат',nums:'3 · 5 · 12',
+    traits:['Любознательность','Остроумие','Лёгкость','Контакт'],
+    text:'Близнецы — знак движения мысли. Вы легко находите общий язык с кем угодно и умеете видеть ситуацию с двух сторон одновременно. Ваша задача — не распыляться: выбрать одно из тысячи «интересно» и довести его до глубины.'},
+  cancer:{name:'Рак',sym:'♋',dates:'21 июня — 22 июля',el:'Вода',pl:'Луна',
+    color:'Серебристый',stone:'Жемчуг',nums:'2 · 7 · 16',
+    traits:['Забота','Интуиция','Память','Дом'],
+    text:'Рак помнит всё — и хорошее, и трудное. Ваша чувствительность — не слабость, а точный инструмент. Вы создаёте пространство, в которое хочется возвращаться. Учитесь защищать свои границы так же бережно, как вы защищаете близких.'},
+  leo:{name:'Лев',sym:'♌',dates:'23 июля — 22 августа',el:'Огонь',pl:'Солнце',
+    color:'Золотой',stone:'Янтарь',nums:'1 · 4 · 10',
+    traits:['Щедрость','Харизма','Творчество','Великодушие'],
+    text:'Лев — знак солнца и щедрости. Вы умеете быть в центре, не отнимая света у других. Творчество, великодушие и вкус к жизни — ваши природные инструменты. Не бойтесь просить признания: вам действительно есть что показать.'},
+  virgo:{name:'Дева',sym:'♍',dates:'23 августа — 22 сентября',el:'Земля',pl:'Меркурий',
+    color:'Бежевый',stone:'Нефрит',nums:'5 · 14 · 23',
+    traits:['Точность','Анализ','Забота','Мастерство'],
+    text:'Дева видит детали, которые ускользают от остальных. Ваша аккуратность — это форма заботы о мире. Но помните: совершенство не требует жертв. Разрешите себе неидеальность — и вы освободите огромную энергию.'},
+  libra:{name:'Весы',sym:'♎',dates:'23 сентября — 22 октября',el:'Воздух',pl:'Венера',
+    color:'Розовый',stone:'Опал',nums:'6 · 15 · 24',
+    traits:['Гармония','Эстетика','Дипломатия','Такт'],
+    text:'Весы ищут равновесие и умеют создавать красоту вокруг себя. Вы прирождённый дипломат: там, где другие спорят, вы находите общий язык. Главное — не терять собственные желания в поиске гармонии для всех.'},
+  scorpio:{name:'Скорпион',sym:'♏',dates:'23 октября — 21 ноября',el:'Вода',pl:'Плутон',
+    color:'Чёрный',stone:'Топаз',nums:'4 · 13 · 22',
+    traits:['Глубина','Страсть','Проницательность','Воля'],
+    text:'Скорпион — знак глубины и трансформации. Вы не интересуетесь поверхностным: вам нужна суть. Ваша интуиция почти никогда не ошибается. Перемена, которой вы боитесь, обычно и есть та, что ведёт вперёд.'},
+  sagittarius:{name:'Стрелец',sym:'♐',dates:'22 ноября — 21 декабря',el:'Огонь',pl:'Юпитер',
+    color:'Синий',stone:'Бирюза',nums:'3 · 9 · 21',
+    traits:['Свобода','Оптимизм','Горизонт','Поиск'],
+    text:'Стрелец — знак горизонта. Вам нужен простор: в мыслях, в дорогах, в планах. Ваш оптимизм — не наивность, а стратегия. Только не забывайте, что настоящая свобода начинается там, где есть точка опоры.'},
+  capricorn:{name:'Козерог',sym:'♑',dates:'22 декабря — 19 января',el:'Земля',pl:'Сатурн',
+    color:'Графитовый',stone:'Оникс',nums:'8 · 10 · 26',
+    traits:['Целеустремлённость','Стойкость','Стратегия','Дисциплина'],
+    text:'Козерог строит вдолгую. Вы умеете отказывать себе сегодня, чтобы получить больше завтра. Ваша сдержанность часто скрывает сильные чувства. Позвольте себе иногда отдыхать — вершина никуда не денется.'},
+  aquarius:{name:'Водолей',sym:'♒',dates:'20 января — 18 февраля',el:'Воздух',pl:'Уран',
+    color:'Бирюзовый',stone:'Аквамарин',nums:'4 · 11 · 29',
+    traits:['Оригинальность','Свобода мысли','Дружба','Новаторство'],
+    text:'Водолей смотрит на мир со стороны — и потому видит то, что другие пропускают. Вы прирождённый новатор и друг для многих. Ваша задача — соединить оригинальность мысли с теплом обычного человеческого присутствия.'},
+  pisces:{name:'Рыбы',sym:'♓',dates:'19 февраля — 20 марта',el:'Вода',pl:'Нептун',
+    color:'Морской',stone:'Аквамарин',nums:'7 · 12 · 30',
+    traits:['Воображение','Сочувствие','Мягкость','Мечта'],
+    text:'Рыбы — знак воображения и сочувствия. Вы чувствуете настроение комнаты раньше, чем кто-либо произнесёт слово. Ваша интуиция — компас. Осталось только научиться отделять собственные желания от чужих.'}
+};
+const ZODIAC_ORDER = ['aries','taurus','gemini','cancer','leo','virgo','libra','scorpio','sagittarius','capricorn','aquarius','pisces'];
+
+/* ================================================================
+   СОСТОЯНИЕ
+   ================================================================ */
+const state = {
+  pageCount: 12,
+  cover: {photo:null, name:'', sub:'', issue:''},
+  spreads: []
+};
+
+const TEMPLATES = [
+  {v:'photo-text', l:'Фото слева · текст справа'},
+  {v:'text-photo', l:'Текст слева · фото справа'},
+  {v:'photo-photo',l:'Два фото'},
+  {v:'quote-photo',l:'Цитата · фото'},
+  {v:'zodiac',     l:'★ Зодиакальный разворот'}
+];
+
+/* ================================================================
+   УТИЛИТЫ
+   ================================================================ */
+const $  = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+
+function esc(s){
+  return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function nl2br(s){ return esc(s).replace(/\n/g,'<br>'); }
+function plural(n,a,b,c){
+  const n10=n%10, n100=n%100;
+  if(n10===1 && n100!==11) return a;
+  if(n10>=2 && n10<=4 && (n100<10||n100>=20)) return b;
+  return c;
+}
+function show(id){
+  $$('.screen').forEach(s=>s.classList.toggle('active', s.id===id));
+  window.scrollTo(0,0);
+}
+
+/* ================================================================
+   ГЕНЕРАЦИЯ HTML СТРАНИЦ
+   ================================================================ */
+function photoDiv(src, cls){
+  cls = cls || '';
+  if(src) return '<div class="full-photo '+cls+'" style="background-image:url(\''+src+'\')"></div>';
+  return '<div class="full-photo empty '+cls+'"><span>Фото</span></div>';
+}
+
+function pageCover(){
+  const c = state.cover;
+  const bg = c.photo
+    ? '<div class="cover-bg" style="background-image:url(\''+c.photo+'\')"></div>'
+    : '<div class="cover-bg cover-bg--empty"></div>';
+  return '<div class="page cover">'
+    + bg
+    + '<div class="cover-shade"></div>'
+    + '<div class="cover-content">'
+    +   '<div class="cover-issue">'+ (esc(c.issue) || 'Спецвыпуск · Личное издание') +'</div>'
+    +   '<div class="cover-masthead">VOGUE</div>'
+    +   '<div class="cover-bottom">'
+    +     '<div class="cover-rule"></div>'
+    +     '<div class="cover-name">'+ (esc(c.name) || 'Имя Фамилия') +'</div>'
+    +     '<div class="cover-sub">'+ (esc(c.sub) || 'персональный выпуск') +'</div>'
+    +   '</div>'
+    + '</div>'
+    + '</div>';
+}
+
+function textPage(sp, no){
+  return '<div class="page page--text">'
+    + '<div class="kicker">'+ (esc(sp.kicker) || 'Редакционная съёмка') +'</div>'
+    + '<h2 class="headline">'+ (esc(sp.heading) || 'Заголовок разворота') +'</h2>'
+    + '<div class="rule"></div>'
+    + '<div class="body">'+ (nl2br(sp.text) || 'Ваш текст появится здесь.') +'</div>'
+    + '<div class="folio"><span>Vogue</span><span>'+ no +'</span></div>'
+    + '</div>';
+}
+
+function quotePage(sp, no){
+  return '<div class="page page--quote">'
+    + '<div class="quote-mark">&ldquo;</div>'
+    + '<div class="quote-text">'+ (esc(sp.heading) || 'Ваша цитата') +'</div>'
+    + '<div class="quote-author">'+ (esc(sp.text) || '— подпись') +'</div>'
+    + '<div class="folio"><span>Vogue</span><span>'+ no +'</span></div>'
+    + '</div>';
+}
+
+function zodiacLeft(sp, no){
+  const z = ZODIAC[sp.zodiac || 'aries'];
+  return '<div class="page page--zodiac-left">'
+    + '<div class="z-kicker">Зодиакальный разворот</div>'
+    + '<div class="z-sym">'+ z.sym +'</div>'
+    + '<div class="z-name">'+ z.name +'</div>'
+    + '<div class="z-dates">'+ z.dates +'</div>'
+    + '<div class="z-info">'
+    +   '<div class="z-row"><span>Стихия</span><b>'+ z.el +'</b></div>'
+    +   '<div class="z-row"><span>Планета</span><b>'+ z.pl +'</b></div>'
+    +   '<div class="z-row"><span>Цвет</span><b>'+ z.color +'</b></div>'
+    +   '<div class="z-row"><span>Камень</span><b>'+ z.stone +'</b></div>'
+    +   '<div class="z-row"><span>Числа</span><b>'+ z.nums +'</b></div>'
+    + '</div>'
+    + '<div class="folio folio--light"><span>Vogue</span><span>'+ no +'</span></div>'
+    + '</div>';
+}
+
+function zodiacRight(sp, no){
+  const z = ZODIAC[sp.zodiac || 'aries'];
+  const chips = z.traits.map(t=>'<span>'+t+'</span>').join('');
+  return '<div class="page page--text">'
+    + '<div class="kicker">Гороскоп · '+ z.name +'</div>'
+    + '<h2 class="headline">Ваш знак — '+ z.name +'</h2>'
+    + '<div class="rule"></div>'
+    + '<div class="body">'+ esc(z.text) +'</div>'
+    + '<div class="z-traits">'+ chips +'</div>'
+    + '<div class="folio"><span>Vogue</span><span>'+ no +'</span></div>'
+    + '</div>';
+}
+
+function pageBack(){
+  return '<div class="page page--back">'
+    + '<div class="back-masthead">VOGUE</div>'
+    + '<div class="back-text">'+ (esc(state.cover.name) || 'Персональное издание') +'<br>Личный выпуск · A4</div>'
+    + '</div>';
+}
+
+function spreadPages(sp, noL, noR){
+  const t = sp.tpl;
+  if(t === 'photo-text'){
+    return [ '<div class="page">'+photoDiv(sp.photoA)+'</div>', textPage(sp, noR) ];
+  }
+  if(t === 'text-photo'){
+    return [ textPage(sp, noL), '<div class="page">'+photoDiv(sp.photoB)+'</div>' ];
+  }
+  if(t === 'photo-photo'){
+    return [ '<div class="page">'+photoDiv(sp.photoA)+'</div>', '<div class="page">'+photoDiv(sp.photoB)+'</div>' ];
+  }
+  if(t === 'quote-photo'){
+    return [ quotePage(sp, noL), '<div class="page">'+photoDiv(sp.photoB)+'</div>' ];
+  }
+  if(t === 'zodiac'){
+    return [ zodiacLeft(sp, noL), zodiacRight(sp, noR) ];
+  }
+  return [ '<div class="page"></div>', '<div class="page"></div>' ];
+}
+
+function buildPages(){
+  const pages = [ pageCover() ];
+  let no = 2;
+  state.spreads.forEach(function(sp){
+    const pair = spreadPages(sp, no, no + 1);
+    pages.push(pair[0], pair[1]);
+    no += 2;
+  });
+  pages.push(pageBack());
+  return pages;
+}
+
+/* ================================================================
+   ИНИЦИАЛИЗАЦИЯ РАЗВОРОТОВ
+   ================================================================ */
+function initSpreads(){
+  const n = (state.pageCount - 2) / 2;
+  const old = state.spreads || [];
+  const arr = [];
+  for(let i=0;i<n;i++){
+    arr.push(old[i] ? old[i] : {
+      tpl:'photo-text', photoA:null, photoB:null,
+      heading:'', text:'', kicker:'', zodiac:'aries'
+    });
+  }
+  state.spreads = arr;
+
+  let zi = -1;
+  for(let i=0;i<arr.length;i++){ if(arr[i].tpl === 'zodiac'){ zi = i; break; } }
+  if(zi === -1){
+    zi = Math.min(Math.floor(n/2), n-1);
+    arr[zi].tpl = 'zodiac';
+  }
+  if(!arr[zi].zodiac) arr[zi].zodiac = 'aries';
+  arr.forEach(function(s,i){ if(i !== zi && s.tpl === 'zodiac') s.tpl = 'photo-text'; });
+}
+
+/* ================================================================
+   РЕНДЕР ПАНЕЛИ УПРАВЛЕНИЯ
+   ================================================================ */
+function photoField(sp, slot, label){
+  const val = slot === 'a' ? sp.photoA : sp.photoB;
+  return '<div class="field">'
+    + '<span>'+ label +'</span>'
+    + '<div class="file-row">'
+    +   '<label class="file-btn"><input type="file" accept="image/*" data-act="photo" data-slot="'+slot+'" hidden><span>'
+    +     (val ? 'Заменить фото' : 'Выбрать файл')
+    +   '</span></label>'
+    +   (val ? '<button class="mini-btn" data-act="clear-photo" data-slot="'+slot+'">Удалить</button>' : '')
+    + '</div>'
+    + '</div>';
+}
+
+function textFieldsHTML(sp){
+  return '<label class="field"><span>Надзаголовок (рубрика)</span>'
+    + '<input type="text" data-act="kicker" value="'+esc(sp.kicker)+'" placeholder="Редакционная съёмка"></label>'
+    + '<label class="field"><span>Заголовок</span>'
+    + '<input type="text" data-act="heading" value="'+esc(sp.heading)+'" placeholder="Тихая роскошь"></label>'
+    + '<label class="field"><span>Текст</span>'
+    + '<textarea data-act="text" rows="7" placeholder="Ваш текст…">'+esc(sp.text)+'</textarea></label>';
+}
+
+function fieldsHTML(sp){
+  const t = sp.tpl;
+  if(t === 'photo-text'){
+    return photoField(sp,'a','Фото — левая страница') + textFieldsHTML(sp);
+  }
+  if(t === 'text-photo'){
+    return photoField(sp,'b','Фото — правая страница') + textFieldsHTML(sp);
+  }
+  if(t === 'photo-photo'){
+    return photoField(sp,'a','Фото — левая страница') + photoField(sp,'b','Фото — правая страница');
+  }
+  if(t === 'quote-photo'){
+    return '<label class="field"><span>Цитата</span>'
+      + '<textarea data-act="heading" rows="4" placeholder="Красота — это то, что вы делаете каждый день">'+esc(sp.heading)+'</textarea></label>'
+      + '<label class="field"><span>Подпись</span>'
+      + '<input type="text" data-act="text" value="'+esc(sp.text)+'" placeholder="— Анна Соколова"></label>'
+      + photoField(sp,'b','Фото — правая страница');
+  }
+  if(t === 'zodiac'){
+    const cur = sp.zodiac || 'aries';
+    const opts = ZODIAC_ORDER.map(function(k){
+      const z = ZODIAC[k];
+      return '<option value="'+k+'"'+(cur===k?' selected':'')+'>'+z.sym+'  '+z.name+' · '+z.dates+'</option>';
+    }).join('');
+    return '<label class="field"><span>Знак зодиака</span><select data-act="zodiac">'+opts+'</select></label>'
+      + '<p class="hint">Разворот сформируется автоматически: символ, стихия, планета, цвет, камень, счастливые числа и персональный гороскоп.</p>';
+  }
+  return '';
+}
+
+function coverCard(){
+  const c = state.cover;
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.innerHTML =
+    '<div class="card-head"><span class="card-title">Обложка</span><span class="card-pages">Стр. 1</span></div>'
+    + '<div class="card-body">'
+    +   '<div class="field"><span>Фотография обложки</span>'
+    +     '<div class="file-row">'
+    +       '<label class="file-btn"><input type="file" accept="image/*" data-cover="photo" hidden><span>'
+    +         (c.photo ? 'Заменить фото' : 'Выбрать файл')
+    +       '</span></label>'
+    +       (c.photo ? '<button class="mini-btn" data-cover-clear="1">Удалить</button>' : '')
+    +     '</div>'
+    +   '</div>'
+    +   '<label class="field"><span>Имя на обложке</span>'
+    +     '<input type="text" data-cover="name" value="'+esc(c.name)+'" placeholder="Анна Соколова"></label>'
+    +   '<label class="field"><span>Подзаголовок</span>'
+    +     '<input type="text" data-cover="sub" value="'+esc(c.sub)+'" placeholder="персональный выпуск"></label>'
+    +   '<label class="field"><span>Надпись сверху</span>'
+    +     '<input type="text" data-cover="issue" value="'+esc(c.issue)+'" placeholder="Спецвыпуск · Личное издание"></label>'
+    + '</div>';
+  return el;
+}
+
+function spreadCard(sp, i){
+  const noL = 2 + i*2, noR = noL + 1;
+  const el = document.createElement('div');
+  el.className = 'card';
+  const opts = TEMPLATES.map(function(t){
+    return '<option value="'+t.v+'"'+(sp.tpl===t.v?' selected':'')+'>'+t.l+'</option>';
+  }).join('');
+  el.innerHTML =
+    '<div class="card-head">'
+    +  '<span class="card-title">Разворот '+(i+1)+'</span>'
+    +  '<span class="card-pages">Стр. '+noL+'–'+noR+'</span>'
+    + '</div>'
+    + '<div class="card-body">'
+    +   '<label class="field"><span>Шаблон разворота</span>'
+    +     '<select data-i="'+i+'" data-act="tpl">'+opts+'</select></label>'
+    +   '<div class="fields" data-i="'+i+'">'+fieldsHTML(sp)+'</div>'
+    + '</div>';
+  return el;
+}
+
+function renderControls(){
+  const box = $('#controls');
+  box.innerHTML = '';
+  box.appendChild(coverCard());
+  state.spreads.forEach(function(sp,i){ box.appendChild(spreadCard(sp,i)); });
+
+  const total = state.pageCount;
+  const cnt = state.spreads.length;
+  $('#topbar-info').textContent = total + ' стр. · ' + cnt + ' ' + plural(cnt,'разворот','разворота','разворотов') + ' · A4';
+}
+
+/* ================================================================
+   ПРЕДПРОСМОТР
+   ================================================================ */
+let previewTimer = null;
+function schedulePreview(){
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(renderPreview, 160);
+}
+
+function renderPreview(){
+  const pages = buildPages();
+  const el = $('#preview');
+  let html = '';
+  for(let i=0;i<pages.length;i++){
+    html += '<div class="thumb">'
+      + '<div class="thumb-inner"><div class="thumb-scaler">'+pages[i]+'</div></div>'
+      + '<div class="thumb-label">Стр. '+(i+1)+'</div>'
+      + '</div>';
+  }
+  el.innerHTML = html;
+}
+
+/* ================================================================
+   СОБЫТИЯ
+   ================================================================ */
+document.addEventListener('input', function(e){
+  const t = e.target;
+
+  if(t.dataset && t.dataset.cover){
+    state.cover[t.dataset.cover] = t.value;
+    schedulePreview();
+    return;
+  }
+  if(t.dataset && t.dataset.act && t.closest('#controls')){
+    const act = t.dataset.act;
+    if(act === 'photo' || act === 'tpl' || act === 'zodiac' || act === 'clear-photo') return;
+    const holder = t.closest('[data-i]');
+    if(!holder) return;
+    const i = parseInt(holder.dataset.i, 10);
+    const sp = state.spreads[i];
+    if(!sp) return;
+    sp[act] = t.value;
+    schedulePreview();
+  }
+});
+
+document.addEventListener('change', function(e){
+  const t = e.target;
+
+  /* файлы */
+  if(t.type === 'file'){
+    const file = t.files && t.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(){
+      if(t.dataset.cover){
+        state.cover[t.dataset.cover] = reader.result;
+        renderControls();
+        schedulePreview();
+      } else if(t.dataset.act === 'photo'){
+        const holder = t.closest('[data-i]');
+        const i = parseInt(holder.dataset.i, 10);
+        const sp = state.spreads[i];
+        if(!sp) return;
+        if(t.dataset.slot === 'a') sp.photoA = reader.result;
+        else sp.photoB = reader.result;
+        renderControls();
+        schedulePreview();
+      }
+    };
+    reader.readAsDataURL(file);
+    return;
+  }
+
+  /* шаблон */
+  if(t.dataset && t.dataset.act === 'tpl'){
+    const i = parseInt(t.dataset.i, 10);
+    handleTemplateChange(i, t.value);
+    return;
+  }
+
+  /* зодиак */
+  if(t.dataset && t.dataset.act === 'zodiac'){
+    const holder = t.closest('[data-i]');
+    const i = parseInt(holder.dataset.i, 10);
+    state.spreads[i].zodiac = t.value;
+    schedulePreview();
+    return;
+  }
+});
+
+document.addEventListener('click', function(e){
+  const clr = e.target.closest('[data-act="clear-photo"]');
+  if(clr){
+    const holder = clr.closest('[data-i]');
+    const i = parseInt(holder.dataset.i, 10);
+    const sp = state.spreads[i];
+    if(clr.dataset.slot === 'a') sp.photoA = null; else sp.photoB = null;
+    renderControls();
+    schedulePreview();
+    return;
+  }
+  const cc = e.target.closest('[data-cover-clear]');
+  if(cc){
+    state.cover.photo = null;
+    renderControls();
+    schedulePreview();
+  }
+});
+
+function handleTemplateChange(i, val){
+  if(val === 'zodiac'){
+    state.spreads.forEach(function(s,j){
+      if(j !== i && s.tpl === 'zodiac') s.tpl = 'photo-text';
+    });
+    state.spreads[i].tpl = 'zodiac';
+    if(!state.spreads[i].zodiac) state.spreads[i].zodiac = 'aries';
+  } else {
+    state.spreads[i].tpl = val;
+  }
+  renderControls();
+  schedulePreview();
+}
+
+/* ================================================================
+   ЭКРАН ВЫБОРА КОЛИЧЕСТВА СТРАНИЦ
+   ================================================================ */
+function renderPageOptions(){
+  const opts = [4,8,12,16,20,24,28,32,36,40];
+  $('#page-options').innerHTML = opts.map(function(n){
+    const k = (n-2)/2;
+    return '<button class="page-opt'+(n===state.pageCount?' active':'')+'" data-n="'+n+'">'
+      + '<b>'+n+'</b>'
+      + '<span>'+k+' '+plural(k,'разворот','разворота','разворотов')+'</span>'
+      + '</button>';
+  }).join('');
+}
+
+$('#page-options').addEventListener('click', function(e){
+  const b = e.target.closest('.page-opt');
+  if(!b) return;
+  state.pageCount = parseInt(b.dataset.n, 10);
+  renderPageOptions();
+});
+
+/* ================================================================
+   НАВИГАЦИЯ
+   ================================================================ */
+$('#btn-start').addEventListener('click', function(){
+  renderPageOptions();
+  show('screen-pages');
+});
+
+$('#btn-back-1').addEventListener('click', function(){ show('screen-start'); });
+
+$('#btn-to-editor').addEventListener('click', function(){
+  initSpreads();
+  renderControls();
+  renderPreview();
+  show('screen-editor');
+});
+
+$('#btn-back-2').addEventListener('click', function(){
+  renderPageOptions();
+  show('screen-pages');
+});
+
+/* ================================================================
+   ГЕНЕРАЦИЯ PDF
+   ================================================================ */
+$('#btn-pdf').addEventListener('click', downloadPDF);
+
+async function downloadPDF(){
+  const btn = $('#btn-pdf');
+  const status = $('#pdf-status');
+  const holder = $('#render-holder');
+
+  btn.disabled = true;
+  status.textContent = 'Подготовка…';
+  holder.innerHTML = '';
+
+  const pagesHTML = buildPages();
+  const nodes = pagesHTML.map(function(h){
+    const d = document.createElement('div');
+    d.innerHTML = h.trim();
+    const node = d.firstElementChild;
+    holder.appendChild(node);
+    return node;
+  });
+
+  await new Promise(function(r){ setTimeout(r, 350); });
+
+  const jsPDFCtor = window.jspdf.jsPDF;
+  const pdf = new jsPDFCtor({unit:'mm', format:'a4', orientation:'portrait', compress:true});
+
+  try{
+    for(let i=0;i<nodes.length;i++){
+      status.textContent = 'Страница ' + (i+1) + ' из ' + nodes.length + '…';
+      await new Promise(function(r){ setTimeout(r, 0); });
+
+      const canvas = await html2canvas(nodes[i], {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        logging: false,
+        useCORS: true,
+        width: 794,
+        height: 1123,
+        windowWidth: 794,
+        windowHeight: 1123
+      });
+
+      const img = canvas.toDataURL('image/jpeg', 0.92);
+      if(i > 0) pdf.addPage();
+      pdf.addImage(img, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+    }
+
+    const safe = (state.cover.name || 'журнал').replace(/[^\wа-яА-ЯёЁ\-]+/g,'_');
+    pdf.save('VOGUE_' + safe + '.pdf');
+    status.textContent = 'Готово ✓';
+  }catch(err){
+    console.error(err);
+    status.textContent = 'Ошибка генерации';
+  }finally{
+    holder.innerHTML = '';
+    btn.disabled = false;
+    setTimeout(function(){ status.textContent = ''; }, 4000);
+  }
+}
+
+/* ================================================================
+   СТАРТ
+   ================================================================ */
+initSpreads();
+</script>
+</body>
+</html>
