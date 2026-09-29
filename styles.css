@@ -1,4 +1,23 @@
 /* ============ БАЗА ============ */
+/* ============================================================
+   ЛОКАЛЬНЫЕ ШРИФТЫ ИЗ FIGMA
+   ============================================================ */
+
+@font-face {
+  font-family: 'Modern No 20';
+  src: url('fonts/ModernNo20.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Petit Formal Script';
+  src: url('fonts/PetitFormalScript.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 :root{
   --ink:#111;
   --paper:#f6f4f0;
