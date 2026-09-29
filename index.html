@@ -3,301 +3,224 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VOGUE Personal — конструктор личного журнала</title>
+<title>VOGUE Personal — конструктор журнала</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<!-- CSS нового шаблона обложки -->
-<link rel="stylesheet" href="templates/cover-01.css">
-
 <style>
-/* ============ БАЗА ============ */
-:root{
-  --ink:#111;
-  --muted:#8a8378;
-  --paper:#f6f4f0;
-  --line:#e3ddd3;
-}
+:root{--ink:#111;--paper:#f6f4f0;--line:#e3ddd3;}
 *{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
-body{
-  background:var(--paper);color:var(--ink);
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
-  -webkit-font-smoothing:antialiased;
-}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',-apple-system,'Segoe UI',Arial,sans-serif;-webkit-font-smoothing:antialiased;}
 .screen{display:none;}
 .screen.active{display:block;}
 button{font-family:inherit;cursor:pointer;}
-
-/* ============ КНОПКИ ============ */
-.btn{
-  border:none;border-radius:100px;padding:15px 34px;font-size:12px;
-  letter-spacing:.22em;text-transform:uppercase;font-weight:500;transition:.2s;
-}
+.btn{border:none;border-radius:100px;padding:14px 30px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;transition:.2s;}
 .btn--primary{background:#111;color:#fff;}
 .btn--primary:hover{background:#333;}
-.btn--primary:disabled{opacity:.45;cursor:wait;}
+.btn--primary:disabled{opacity:.4;cursor:not-allowed;}
 .btn--ghost{background:transparent;color:#111;border:1px solid #cfc8bd;}
 .btn--ghost:hover{background:#fff;}
+.btn--danger{background:transparent;color:#b04a3a;border:1px solid #e5c4bc;}
+.btn--danger:hover{background:#fdf5f3;}
 
-/* ============ СТАРТОВЫЕ ЭКРАНЫ ============ */
-.center-wrap{
-  min-height:100vh;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;text-align:center;padding:60px 24px;
-}
-.brand{
-  font-family:'Playfair Display',serif;font-size:34px;font-weight:700;
-  letter-spacing:.34em;margin-bottom:34px;
-}
-.center-wrap h1{
-  font-family:'Playfair Display',serif;font-size:52px;font-weight:500;
-  margin:0 0 20px;letter-spacing:-.01em;line-height:1.1;
-}
-.center-wrap p{
-  max-width:520px;font-size:15px;line-height:1.75;color:#6f6862;margin:0 0 40px;
-}
-.step{
-  font-size:11px;letter-spacing:.36em;text-transform:uppercase;
-  color:#a49c90;margin-bottom:22px;
-}
+/* ---------- Landing ---------- */
+.center-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 24px;}
+.brand{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;letter-spacing:.34em;margin-bottom:34px;}
+.center-wrap h1{font-family:'Playfair Display',serif;font-size:52px;font-weight:500;margin:0 0 20px;letter-spacing:-.01em;line-height:1.1;}
+.center-wrap p{max-width:560px;font-size:15px;line-height:1.75;color:#6f6862;margin:0 0 40px;}
+.step{font-size:11px;letter-spacing:.36em;text-transform:uppercase;color:#a49c90;margin-bottom:22px;}
+.nav-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
 
-/* ============ ВЫБОР СТРАНИЦ ============ */
-.page-options{
-  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:640px;margin-bottom:42px;
-}
-.page-opt{
-  width:108px;padding:18px 8px;background:#fff;border:1px solid var(--line);
-  border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:6px;
-  transition:.18s;
-}
+/* ---------- Topbar ---------- */
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:22px;padding:14px 28px;background:rgba(246,244,240,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+.topbar-brand{font-family:'Playfair Display',serif;font-size:20px;letter-spacing:.22em;font-weight:700;}
+.topbar-brand span{font-family:'Inter',sans-serif;font-size:9px;letter-spacing:.3em;color:#a49c90;margin-left:8px;vertical-align:middle;}
+.topbar-info{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a8378;}
+.topbar-actions{margin-left:auto;display:flex;gap:10px;}
+.topbar .btn{padding:10px 22px;font-size:11px;}
+
+/* ---------- Templates screen ---------- */
+.wrap{max-width:1400px;margin:0 auto;padding:40px 28px 80px;}
+.head-row{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:30px;flex-wrap:wrap;}
+.head-row h2{font-family:'Playfair Display',serif;font-size:34px;font-weight:500;margin:0;letter-spacing:-.01em;}
+.head-row .sub{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#a49c90;margin-top:6px;}
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:22px;}
+.tpl-card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:.2s;position:relative;}
+.tpl-card:hover{border-color:#111;transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.08);}
+.tpl-card .tc-thumb{aspect-ratio:794/1123;background:#f4f1ec;overflow:hidden;position:relative;border-bottom:1px solid var(--line);}
+.tpl-card .tc-thumb .thumb-scaler{transform-origin:top left;width:794px;height:1123px;}
+.tpl-card .tc-meta{padding:14px 16px;}
+.tpl-card .tc-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;line-height:1.25;}
+.tpl-card .tc-cat{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#a49c90;margin-top:4px;}
+.tpl-card .tc-del{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.92);border:none;width:30px;height:30px;border-radius:50%;color:#b04a3a;font-size:16px;display:none;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.1);}
+.tpl-card:hover .tc-del{display:flex;}
+.empty-state{text-align:center;padding:80px 20px;border:2px dashed #d8d2c8;border-radius:20px;background:#fdfcfb;max-width:640px;margin:30px auto;}
+.empty-state .es-icon{font-size:56px;opacity:.35;margin-bottom:16px;}
+.empty-state h3{font-family:'Playfair Display',serif;font-size:26px;font-weight:500;margin:0 0 12px;}
+.empty-state p{font-size:14px;line-height:1.7;color:#8a8378;margin:0 0 24px;max-width:420px;margin-left:auto;margin-right:auto;}
+
+/* ---------- Upload modal ---------- */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(4px);overflow-y:auto;}
+.modal.hidden{display:none;}
+.modal__inner{background:#fff;border-radius:18px;width:100%;max-width:780px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.3);}
+.modal__head{display:flex;justify-content:space-between;align-items:center;padding:20px 26px;border-bottom:1px solid #f0ece5;position:sticky;top:0;background:#fff;border-radius:18px 18px 0 0;z-index:2;}
+.modal__title{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;margin:0;}
+.modal__close{background:none;border:none;font-size:22px;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:.15s;}
+.modal__close:hover{background:#f4f1ec;}
+.modal__body{padding:24px 26px 28px;display:flex;flex-direction:column;gap:20px;}
+
+.drop-zone{border:2px dashed #cfc8bd;border-radius:14px;padding:40px 20px;text-align:center;transition:.2s;background:#fdfcfb;cursor:pointer;}
+.drop-zone:hover,.drop-zone.dragover{border-color:#111;background:#faf8f4;}
+.drop-zone .dz-icon{font-size:44px;opacity:.4;margin-bottom:12px;}
+.drop-zone .dz-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:600;margin-bottom:6px;}
+.drop-zone .dz-hint{font-size:12px;color:#8a8378;letter-spacing:.05em;}
+.dz-file{margin-top:14px;font-size:12px;color:#111;letter-spacing:.05em;}
+
+.field{display:flex;flex-direction:column;gap:8px;}
+.field > label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#8a8378;font-weight:600;}
+.field input[type=text],.field textarea,.field select{width:100%;border:1px solid #e2ddd3;border-radius:9px;padding:12px 14px;font-family:inherit;font-size:14px;color:#111;background:#fdfcfb;transition:.15s;}
+.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:#111;background:#fff;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:600px){.grid-2{grid-template-columns:1fr;}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid #e2ddd3;border-radius:100px;font-size:12px;cursor:pointer;transition:.15s;background:#fff;user-select:none;}
+.chip:hover{border-color:#111;}
+.chip.on{background:#111;color:#fff;border-color:#111;}
+.chip input{display:none;}
+
+/* ---------- Page options ---------- */
+.page-options{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:640px;margin-bottom:42px;}
+.page-opt{width:108px;padding:18px 8px;background:#fff;border:1px solid var(--line);border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:.18s;}
 .page-opt:hover{border-color:#b8b0a3;transform:translateY(-2px);}
 .page-opt.active{border-color:#111;background:#111;color:#fff;}
 .page-opt b{font-family:'Playfair Display',serif;font-size:26px;font-weight:600;}
 .page-opt span{font-size:9px;letter-spacing:.16em;text-transform:uppercase;opacity:.65;}
-.nav-row{display:flex;gap:14px;}
 
-/* ============ РЕДАКТОР ============ */
-.topbar{
-  position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:22px;
-  padding:14px 28px;background:rgba(246,244,240,.94);
-  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
-}
-.topbar-brand{font-family:'Playfair Display',serif;font-size:21px;letter-spacing:.22em;font-weight:700;}
-.topbar-brand span{
-  font-family:'Inter',sans-serif;font-size:9px;letter-spacing:.3em;
-  color:#a49c90;margin-left:8px;vertical-align:middle;
-}
-.topbar-info{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a8378;}
-.topbar-actions{margin-left:auto;display:flex;gap:10px;}
-.topbar .btn{padding:11px 24px;font-size:11px;}
-
-.editor-layout{
-  display:flex;align-items:flex-start;gap:28px;padding:28px;
-  max-width:1520px;margin:0 auto;
-}
-.controls{flex:1;min-width:0;display:flex;flex-direction:column;gap:16px;}
-
-.card{
-  background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
-}
-.card-head{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:15px 20px;background:#fbfaf8;border-bottom:1px solid #f0ece5;
-}
-.card-title{font-family:'Playfair Display',serif;font-size:17px;font-weight:600;letter-spacing:.02em;}
-.card-pages{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#a49c90;}
-.card-body{padding:20px;display:flex;flex-direction:column;gap:16px;}
-
-.field{display:flex;flex-direction:column;gap:8px;}
-.field > span{
-  font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#8a8378;font-weight:500;
-}
-.field input[type=text], .field textarea, .field select{
-  width:100%;border:1px solid #e2ddd3;border-radius:9px;padding:12px 14px;
-  font-family:inherit;font-size:14px;color:#111;background:#fdfcfb;resize:vertical;
-  transition:.15s;
-}
-.field input[type=text]:focus, .field textarea:focus, .field select:focus{
-  outline:none;border-color:#111;background:#fff;
-}
-.field textarea{line-height:1.6;}
-
-.file-row{display:flex;gap:10px;align-items:center;}
-.file-btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  padding:11px 22px;border:1px dashed #cfc8bd;border-radius:9px;
-  font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#6f6862;
-  cursor:pointer;transition:.18s;background:#fdfcfb;
-}
+/* ---------- Editor ---------- */
+.editor{display:grid;grid-template-columns:220px 1fr 340px;gap:20px;padding:20px;max-width:1600px;margin:0 auto;align-items:start;}
+@media(max-width:1200px){.editor{grid-template-columns:1fr;padding:12px;}}
+.sidebar{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;position:sticky;top:84px;max-height:calc(100vh - 112px);display:flex;flex-direction:column;overflow:hidden;}
+@media(max-width:1200px){.sidebar{position:static;max-height:none;}}
+.sidebar h2,.form-panel h2{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#8a8378;font-weight:600;margin:0 0 12px 4px;}
+.page-list{list-style:none;padding:0;margin:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+.page-item{display:flex;align-items:center;gap:10px;padding:8px;border-radius:9px;cursor:pointer;transition:.15s;border:1px solid transparent;}
+.page-item:hover{background:#faf8f4;}
+.page-item.active{background:#f0ece5;border-color:#111;}
+.page-num{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:#a49c90;min-width:22px;text-align:center;}
+.page-item.active .page-num{color:#111;}
+.page-thumb-mini{width:56px;height:79px;background:#fff;border:1px solid #eee;overflow:hidden;position:relative;flex:0 0 auto;border-radius:2px;}
+.page-thumb-mini .thumb-scaler{transform-origin:top left;width:794px;height:1123px;}
+.page-name{font-size:10px;letter-spacing:.08em;color:#6f6862;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.stage{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px;display:flex;flex-direction:column;align-items:center;gap:18px;}
+.stage-title{font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#8a8378;font-weight:600;align-self:flex-start;}
+.stage-preview{width:100%;max-width:520px;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,.12);overflow:hidden;position:relative;border-radius:2px;}
+.stage-actions{display:flex;gap:10px;}
+.form-panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;position:sticky;top:84px;max-height:calc(100vh - 112px);display:flex;flex-direction:column;overflow:hidden;}
+@media(max-width:1200px){.form-panel{position:static;max-height:none;}}
+.tpl-info{padding:12px 14px;background:#faf8f4;border-radius:9px;margin-bottom:14px;}
+.tpl-info .name{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;}
+.tpl-info .cat{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#a49c90;margin-top:2px;}
+.form-fields{overflow-y:auto;display:flex;flex-direction:column;gap:14px;}
+.file-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.file-btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 18px;border:1px dashed #cfc8bd;border-radius:9px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6f6862;cursor:pointer;background:#fdfcfb;}
 .file-btn:hover{border-color:#111;color:#111;background:#fff;}
-.mini-btn{
-  background:transparent;border:none;font-size:10px;letter-spacing:.18em;
-  text-transform:uppercase;color:#b04a3a;padding:8px 4px;
-}
+.mini-btn{background:transparent;border:none;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#b04a3a;padding:6px 2px;}
 .mini-btn:hover{text-decoration:underline;}
-.hint{
-  font-size:12px;line-height:1.7;color:#8a8378;margin:0;
-  padding:12px 14px;background:#faf8f4;border-radius:9px;
-}
 
-/* ============ ПРЕДПРОСМОТР ============ */
-.preview-col{
-  width:452px;flex:0 0 452px;position:sticky;top:84px;
-  max-height:calc(100vh - 112px);display:flex;flex-direction:column;
-  background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;
-}
-.preview-head{
-  display:flex;justify-content:space-between;align-items:center;gap:10px;
-  padding:14px 18px;border-bottom:1px solid #f0ece5;
-  font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#8a8378;
-}
-#pdf-status{color:#111;letter-spacing:.1em;text-transform:none;font-size:11px;}
-.preview{
-  overflow-y:auto;padding:18px;display:flex;flex-wrap:wrap;gap:14px;
-  justify-content:center;align-content:flex-start;
-}
-.thumb{display:flex;flex-direction:column;align-items:center;gap:6px;}
-.thumb-inner{
-  width:175px;height:247px;overflow:hidden;background:#fff;
-  box-shadow:0 6px 18px rgba(0,0,0,.13);border-radius:2px;
-}
-.thumb-scaler{transform:scale(.22);transform-origin:top left;width:794px;height:1123px;}
-.thumb-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#a49c90;}
+/* ---------- Gallery ---------- */
+.category-filter{display:flex;gap:8px;padding:14px 26px;overflow-x:auto;border-bottom:1px solid #f0ece5;background:#fbfaf8;}
+.cat-chip{background:#fff;border:1px solid #e3ddd3;border-radius:100px;padding:8px 16px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6f6862;white-space:nowrap;transition:.15s;font-weight:500;}
+.cat-chip:hover{border-color:#111;color:#111;}
+.cat-chip.active{background:#111;color:#fff;border-color:#111;}
+.gallery-grid{padding:22px 26px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:18px;}
+.gallery-item{cursor:pointer;transition:.18s;border-radius:10px;overflow:hidden;border:2px solid transparent;background:#faf8f4;}
+.gallery-item:hover{border-color:#b8b0a3;transform:translateY(-2px);}
+.gallery-item .thumb-wrap{width:100%;aspect-ratio:794/1123;background:#fff;overflow:hidden;position:relative;border-bottom:1px solid #f0ece5;}
+.gallery-item .thumb-wrap .thumb-scaler{transform-origin:top left;width:794px;height:1123px;}
+.gallery-item .g-meta{padding:10px 12px;}
+.gallery-item .g-name{font-family:'Playfair Display',serif;font-size:13px;font-weight:600;}
+.gallery-item .g-cat{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#a49c90;margin-top:3px;}
+.gallery-item.active-tpl{border-color:#111;}
 
-@media(max-width:1200px){
-  .editor-layout{flex-direction:column;}
-  .preview-col{width:100%;flex:none;position:static;max-height:none;}
-}
+/* ---------- A4 PAGE ---------- */
+.page{width:794px;height:1123px;background:#fff;position:relative;overflow:hidden;font-family:'Playfair Display',Georgia,serif;color:#111;flex:0 0 auto;}
+.tpl-decor{position:absolute;top:0;left:0;width:794px;height:1123px;z-index:3;pointer-events:none;display:block;}
+.tpl-decor-img{position:absolute;top:0;left:0;width:794px;height:1123px;z-index:3;pointer-events:none;object-fit:cover;}
 
-/* ================================================================
-   СТРАНИЦА A4  (794 x 1123 px ≈ 210 x 297 мм)
-   ================================================================ */
-.page{
-  width:794px;height:1123px;background:#fff;position:relative;overflow:hidden;
-  font-family:'Playfair Display',Georgia,'Times New Roman',serif;color:#111;
-  flex:0 0 auto;
-}
+/* Photo layers */
+.ph-full{position:absolute;inset:0;background-size:cover;background-position:center;background-color:#eae6df;z-index:1;}
+.ph-full.empty{display:flex;align-items:center;justify-content:center;}
+.ph-full.empty span{font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.4em;text-transform:uppercase;color:#b8b0a4;}
+.ph-left{position:absolute;left:0;top:0;width:50%;height:100%;background-size:cover;background-position:center;background-color:#eae6df;z-index:1;}
+.ph-right{position:absolute;right:0;top:0;width:50%;height:100%;background-size:cover;background-position:center;background-color:#eae6df;z-index:1;}
+.ph-left.empty,.ph-right.empty{display:flex;align-items:center;justify-content:center;}
+.ph-left.empty span,.ph-right.empty span{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:#b8b0a4;}
 
-/* ---------- ⭐ Обложка VOGUE: inline-SVG для корректного PDF ---------- */
-.cv-decor-inline {
-  position: absolute;
-  top: 0; left: 0;
-  width: 794px;
-  height: 1123px;
-  z-index: 2;
-  pointer-events: none;
-  display: block;
-}
+/* Text layers — 4 zones */
+.txt{position:absolute;z-index:5;font-family:'Playfair Display',Georgia,serif;color:#111;text-shadow:0 1px 12px rgba(0,0,0,.35);}
+.txt--tl{left:60px;top:60px;max-width:340px;text-align:left;}
+.txt--tr{right:60px;top:60px;max-width:340px;text-align:right;}
+.txt--bl{left:60px;bottom:80px;max-width:380px;text-align:left;}
+.txt--br{right:60px;bottom:80px;max-width:340px;text-align:right;}
+.txt h1{font-size:58px;line-height:1.02;margin:0 0 14px;font-weight:500;letter-spacing:-.01em;}
+.txt h2{font-size:40px;line-height:1.08;margin:0 0 12px;font-weight:500;}
+.txt h3{font-size:28px;line-height:1.15;margin:0 0 10px;font-weight:500;}
+.txt p{font-size:17px;line-height:1.5;margin:0;font-style:italic;}
+.txt.small p{font-size:14px;line-height:1.55;}
+.txt.big h1{font-size:74px;}
+.txt.light{color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.6);}
+.txt.dark{color:#111;text-shadow:0 1px 12px rgba(255,255,255,.5);}
+.folio{position:absolute;left:60px;right:60px;bottom:28px;display:flex;justify-content:space-between;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.3em;color:#b8b1a6;text-transform:uppercase;z-index:6;}
 
-/* ---------- Текстовая страница ---------- */
-.page--text{padding:96px 78px;display:flex;flex-direction:column;}
-.kicker{
-  font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:.36em;
-  text-transform:uppercase;color:#9a9287;margin-bottom:28px;
-}
-.headline{
-  font-size:58px;line-height:1.05;font-weight:500;margin:0 0 30px;letter-spacing:-.015em;
-}
-.rule{width:64px;height:1px;background:#111;margin-bottom:34px;flex:0 0 auto;}
-.body{
-  font-family:Georgia,'Times New Roman',serif;font-size:17px;line-height:1.82;
-  color:#2b2b2b;text-align:justify;
-}
-.folio{
-  position:absolute;left:78px;right:78px;bottom:48px;display:flex;
-  justify-content:space-between;font-family:'Inter',sans-serif;font-size:10px;
-  letter-spacing:.3em;color:#b8b1a6;text-transform:uppercase;
-}
-.folio--light{color:rgba(255,255,255,.34);}
-
-/* ---------- Фото на всю страницу ---------- */
-.full-photo{position:absolute;inset:0;background-size:cover;background-position:center;background-color:#eae6df;}
-.full-photo.empty{
-  background:#e9e5de;display:flex;align-items:center;justify-content:center;
-}
-.full-photo.empty span{
-  font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.4em;
-  text-transform:uppercase;color:#b8b0a4;
-}
-
-/* ---------- Цитата ---------- */
-.page--quote{
-  padding:150px 90px;display:flex;flex-direction:column;justify-content:center;background:#f3f0eb;
-}
-.quote-mark{font-size:150px;line-height:.55;color:#cdc5b7;margin-bottom:26px;font-family:'Playfair Display',serif;}
-.quote-text{font-size:46px;line-height:1.26;font-style:italic;font-weight:400;}
-.quote-author{
-  font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.3em;
-  text-transform:uppercase;color:#8a8378;margin-top:40px;
-}
-
-/* ---------- Зодиак: левая страница ---------- */
-.page--zodiac-left{
-  background:#0f0f10;color:#fff;padding:78px 70px;display:flex;flex-direction:column;
-}
-.z-kicker{
-  font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.42em;
-  text-transform:uppercase;color:#8d8577;
-}
-.z-sym{font-size:154px;line-height:1;margin-top:52px;color:#d9c9a3;}
-.z-name{font-size:74px;letter-spacing:.05em;text-transform:uppercase;margin-top:6px;line-height:1;}
-.z-dates{
-  font-family:'Inter',sans-serif;font-size:13px;letter-spacing:.26em;
-  color:#a49a8a;margin-top:16px;
-}
-.z-info{margin-top:auto;border-top:1px solid rgba(255,255,255,.16);padding-top:22px;}
-.z-row{
-  display:flex;justify-content:space-between;align-items:baseline;
-  font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.12em;
-  padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);
-}
-.z-row span{color:#8d8577;text-transform:uppercase;font-size:10px;letter-spacing:.24em;}
-.z-row b{font-weight:500;color:#fff;font-family:'Playfair Display',serif;font-size:17px;letter-spacing:.02em;}
-
-/* ---------- Зодиак: правая страница ---------- */
-.z-traits{display:flex;flex-wrap:wrap;gap:10px;margin-top:38px;}
-.z-traits span{
-  font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.22em;
-  text-transform:uppercase;border:1px solid #d8d2c8;border-radius:100px;
-  padding:10px 18px;color:#6f6862;
-}
-
-/* ---------- Задняя обложка ---------- */
-.page--back{
-  background:#0f0f10;color:#fff;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-}
-.back-masthead{font-size:64px;letter-spacing:.3em;font-weight:700;}
-.back-text{
-  font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.34em;
-  text-transform:uppercase;color:#8d8577;margin-top:30px;text-align:center;line-height:2.2;
-}
-
-/* ---------- Контейнер для рендера PDF ---------- */
+/* Render holder for PDF */
 #render-holder{position:absolute;left:-20000px;top:0;width:794px;}
 </style>
 </head>
 <body>
 
-<!-- ================= ЭКРАН 1: СТАРТ ================= -->
+<!-- ========== SCREEN: START ========== -->
 <section id="screen-start" class="screen active">
   <div class="center-wrap">
     <div class="brand">VOGUE</div>
-    <h1>Ваш личный журнал</h1>
-    <p>Соберите персональный выпуск: выберите количество страниц, загрузите фотографии, добавьте текст и получите готовый PDF — каждый лист формата A4.</p>
-    <button class="btn btn--primary" id="btn-start">Создать журнал</button>
+    <h1>Личный журнал<br>за 5 минут</h1>
+    <p>Загрузите свои шаблоны (SVG из Figma или картинки), соберите журнал из любого количества страниц и скачайте готовый PDF формата A4.</p>
+    <div class="nav-row">
+      <button class="btn btn--ghost" id="btn-my-templates">Мои шаблоны · <span id="tpl-count">0</span></button>
+      <button class="btn btn--primary" id="btn-create">Создать журнал</button>
+    </div>
   </div>
 </section>
 
-<!-- ================= ЭКРАН 2: КОЛИЧЕСТВО СТРАНИЦ ================= -->
+<!-- ========== SCREEN: TEMPLATES ========== -->
+<section id="screen-templates" class="screen">
+  <header class="topbar">
+    <div class="topbar-brand">VOGUE <span>TEMPLATES</span></div>
+    <div class="topbar-info" id="tpl-info">0 шаблонов</div>
+    <div class="topbar-actions">
+      <button class="btn btn--ghost" id="btn-tpl-home">На главную</button>
+      <button class="btn btn--primary" id="btn-upload-tpl">+ Загрузить шаблон</button>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="head-row">
+      <div>
+        <h2>Мои шаблоны</h2>
+        <div class="sub">Хранятся в этом браузере навсегда</div>
+      </div>
+    </div>
+    <div id="tpl-container"></div>
+  </div>
+</section>
+
+<!-- ========== SCREEN: PAGE COUNT ========== -->
 <section id="screen-pages" class="screen">
   <div class="center-wrap">
     <div class="step">Шаг 2 из 3</div>
     <h1>Сколько страниц?</h1>
-    <p>Количество страниц должно быть кратно четырём — это требование печати. Первая страница — обложка, последняя — задняя обложка, остальные формируют развороты по два листа A4.</p>
+    <p>Количество страниц должно быть кратно четырём. Для каждой страницы можно выбрать любой из ваших шаблонов.</p>
     <div class="page-options" id="page-options"></div>
     <div class="nav-row">
       <button class="btn btn--ghost" id="btn-back-1">Назад</button>
@@ -306,673 +229,799 @@ button{font-family:inherit;cursor:pointer;}
   </div>
 </section>
 
-<!-- ================= ЭКРАН 3: РЕДАКТОР ================= -->
+<!-- ========== SCREEN: EDITOR ========== -->
 <section id="screen-editor" class="screen">
   <header class="topbar">
     <div class="topbar-brand">VOGUE <span>PERSONAL</span></div>
     <div class="topbar-info" id="topbar-info"></div>
     <div class="topbar-actions">
-      <button class="btn btn--ghost" id="btn-back-2">Назад</button>
+      <button class="btn btn--ghost" id="btn-editor-back">Назад</button>
       <button class="btn btn--primary" id="btn-pdf">Скачать PDF</button>
     </div>
   </header>
-
-  <div class="editor-layout">
-    <div class="controls" id="controls"></div>
-    <aside class="preview-col">
-      <div class="preview-head">
-        <span>Предпросмотр</span>
-        <span id="pdf-status"></span>
+  <div class="editor">
+    <aside class="sidebar">
+      <h2>Страницы</h2>
+      <ul class="page-list" id="page-list"></ul>
+    </aside>
+    <section class="stage">
+      <div class="stage-title" id="stage-title">Страница 1</div>
+      <div class="stage-preview" id="stage-preview"></div>
+      <div class="stage-actions">
+        <button class="btn btn--primary" id="btn-change-tpl">Сменить шаблон</button>
       </div>
-      <div class="preview" id="preview"></div>
+    </section>
+    <aside class="form-panel">
+      <h2>Редактирование</h2>
+      <div class="tpl-info">
+        <div class="name" id="tpl-name">—</div>
+        <div class="cat" id="tpl-cat">—</div>
+      </div>
+      <div class="form-fields" id="form-fields"></div>
     </aside>
   </div>
 </section>
+
+<!-- ========== MODAL: UPLOAD TEMPLATE ========== -->
+<div class="modal hidden" id="upload-modal">
+  <div class="modal__inner">
+    <div class="modal__head">
+      <h2 class="modal__title">Загрузить шаблон</h2>
+      <button class="modal__close" id="upload-close">✕</button>
+    </div>
+    <div class="modal__body">
+      <div class="drop-zone" id="drop-zone">
+        <input type="file" id="file-input" accept=".svg,image/*" hidden>
+        <div class="dz-icon">⬆</div>
+        <div class="dz-title">Перетащите файл или нажмите</div>
+        <div class="dz-hint">SVG из Figma · PNG · JPG — размер A4 (210×297 мм)</div>
+        <div class="dz-file" id="dz-file"></div>
+      </div>
+
+      <div class="field">
+        <label>Название шаблона</label>
+        <input type="text" id="up-name" placeholder="Например: VOGUE Classic Cover">
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Категория</label>
+          <input type="text" id="up-cat" placeholder="Обложки" list="cat-list">
+          <datalist id="cat-list">
+            <option value="Обложки">
+            <option value="Задние обложки">
+            <option value="Развороты">
+            <option value="Фото">
+            <option value="Текст">
+            <option value="Зодиак">
+            <option value="Прочее">
+          </datalist>
+        </div>
+        <div class="field">
+          <label>Где будет фото</label>
+          <select id="up-photo">
+            <option value="none">Без фото</option>
+            <option value="full">Фото на всю страницу</option>
+            <option value="left">Фото слева (50%)</option>
+            <option value="right">Фото справа (50%)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Текстовые блоки (выберите, какие нужны)</label>
+        <div class="chips" id="zone-chips">
+          <label class="chip on" data-zone="tl"><input type="checkbox" checked> Сверху слева</label>
+          <label class="chip" data-zone="tr"><input type="checkbox"> Сверху справа</label>
+          <label class="chip on" data-zone="bl"><input type="checkbox" checked> Снизу слева</label>
+          <label class="chip" data-zone="br"><input type="checkbox"> Снизу справа</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Цвет текста</label>
+        <select id="up-txtcolor">
+          <option value="dark">Тёмный (для светлого фона)</option>
+          <option value="light">Светлый (для тёмного фона)</option>
+        </select>
+      </div>
+
+      <div class="nav-row" style="justify-content:flex-end;">
+        <button class="btn btn--ghost" id="upload-cancel">Отмена</button>
+        <button class="btn btn--primary" id="upload-save" disabled>Сохранить шаблон</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODAL: GALLERY ========== -->
+<div class="modal hidden" id="gallery-modal">
+  <div class="modal__inner">
+    <div class="modal__head">
+      <h2 class="modal__title">Выберите шаблон <span id="modal-page-label"></span></h2>
+      <button class="modal__close" id="modal-close">✕</button>
+    </div>
+    <nav class="category-filter" id="category-filter"></nav>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </div>
+</div>
 
 <div id="render-holder"></div>
 
 <script>
 /* ================================================================
-   ДАННЫЕ ЗОДИАКА
-   ================================================================ */
-const ZODIAC = {
-  aries:{name:'Овен',sym:'♈',dates:'21 марта — 19 апреля',el:'Огонь',pl:'Марс',
-    color:'Алый',stone:'Рубин',nums:'1 · 9 · 19',
-    traits:['Смелость','Инициатива','Прямота','Энергия'],
-    text:'Овен открывает зодиакальный круг, и в этом — его сила. Вы не ждёте подходящего момента, вы его создаёте.'},
-  taurus:{name:'Телец',sym:'♉',dates:'20 апреля — 20 мая',el:'Земля',pl:'Венера',
-    color:'Изумрудный',stone:'Изумруд',nums:'2 · 6 · 15',
-    traits:['Надёжность','Чувственность','Терпение','Вкус'],
-    text:'Телец знает цену вещам и времени. Вы не спешите — и потому почти никогда не ошибаетесь в главном.'},
-  gemini:{name:'Близнецы',sym:'♊',dates:'21 мая — 20 июня',el:'Воздух',pl:'Меркурий',
-    color:'Жёлтый',stone:'Агат',nums:'3 · 5 · 12',
-    traits:['Любознательность','Остроумие','Лёгкость','Контакт'],
-    text:'Близнецы — знак движения мысли. Вы легко находите общий язык с кем угодно.'},
-  cancer:{name:'Рак',sym:'♋',dates:'21 июня — 22 июля',el:'Вода',pl:'Луна',
-    color:'Серебристый',stone:'Жемчуг',nums:'2 · 7 · 16',
-    traits:['Забота','Интуиция','Память','Дом'],
-    text:'Рак помнит всё — и хорошее, и трудное. Ваша чувствительность — не слабость, а точный инструмент.'},
-  leo:{name:'Лев',sym:'♌',dates:'23 июля — 22 августа',el:'Огонь',pl:'Солнце',
-    color:'Золотой',stone:'Янтарь',nums:'1 · 4 · 10',
-    traits:['Щедрость','Харизма','Творчество','Великодушие'],
-    text:'Лев — знак солнца и щедрости. Вы умеете быть в центре, не отнимая света у других.'},
-  virgo:{name:'Дева',sym:'♍',dates:'23 августа — 22 сентября',el:'Земля',pl:'Меркурий',
-    color:'Бежевый',stone:'Нефрит',nums:'5 · 14 · 23',
-    traits:['Точность','Анализ','Забота','Мастерство'],
-    text:'Дева видит детали, которые ускользают от остальных. Ваша аккуратность — это форма заботы о мире.'},
-  libra:{name:'Весы',sym:'♎',dates:'23 сентября — 22 октября',el:'Воздух',pl:'Венера',
-    color:'Розовый',stone:'Опал',nums:'6 · 15 · 24',
-    traits:['Гармония','Эстетика','Дипломатия','Такт'],
-    text:'Весы ищут равновесие и умеют создавать красоту вокруг себя. Вы прирождённый дипломат.'},
-  scorpio:{name:'Скорпион',sym:'♏',dates:'23 октября — 21 ноября',el:'Вода',pl:'Плутон',
-    color:'Чёрный',stone:'Топаз',nums:'4 · 13 · 22',
-    traits:['Глубина','Страсть','Проницательность','Воля'],
-    text:'Скорпион — знак глубины и трансформации. Вы не интересуетесь поверхностным: вам нужна суть.'},
-  sagittarius:{name:'Стрелец',sym:'♐',dates:'22 ноября — 21 декабря',el:'Огонь',pl:'Юпитер',
-    color:'Синий',stone:'Бирюза',nums:'3 · 9 · 21',
-    traits:['Свобода','Оптимизм','Горизонт','Поиск'],
-    text:'Стрелец — знак горизонта. Вам нужен простор: в мыслях, в дорогах, в планах.'},
-  capricorn:{name:'Козерог',sym:'♑',dates:'22 декабря — 19 января',el:'Земля',pl:'Сатурн',
-    color:'Графитовый',stone:'Оникс',nums:'8 · 10 · 26',
-    traits:['Целеустремлённость','Стойкость','Стратегия','Дисциплина'],
-    text:'Козерог строит вдолгую. Вы умеете отказывать себе сегодня, чтобы получить больше завтра.'},
-  aquarius:{name:'Водолей',sym:'♒',dates:'20 января — 18 февраля',el:'Воздух',pl:'Уран',
-    color:'Бирюзовый',stone:'Аквамарин',nums:'4 · 11 · 29',
-    traits:['Оригинальность','Свобода мысли','Дружба','Новаторство'],
-    text:'Водолей смотрит на мир со стороны — и потому видит то, что другие пропускают.'},
-  pisces:{name:'Рыбы',sym:'♓',dates:'19 февраля — 20 марта',el:'Вода',pl:'Нептун',
-    color:'Морской',stone:'Аквамарин',nums:'7 · 12 · 30',
-    traits:['Воображение','Сочувствие','Мягкость','Мечта'],
-    text:'Рыбы — знак воображения и сочувствия. Вы чувствуете настроение комнаты раньше, чем кто-либо произнесёт слово.'}
-};
-const ZODIAC_ORDER = ['aries','taurus','gemini','cancer','leo','virgo','libra','scorpio','sagittarius','capricorn','aquarius','pisces'];
-
-/* ================================================================
-   СОСТОЯНИЕ
-   ================================================================ */
-const state = {
-  pageCount: 12,
-  cover: {
-    photo:null,
-    name:'ULIANA',
-    sub:'персональный выпуск',
-    issue:'Спецвыпуск · Личное издание',
-    leftText:'If she loves, she loves with all her heart. She is loyal to her loved ones and will never betray them',
-    loveHead:'Love',
-    loveBody:"Love is her everything. And that's all we know about her",
-    lifeHead:'Life',
-    lifeBody:'Her life is an ocean filled with love, care, and happiness.'
-  },
-  spreads: []
-};
-
-const TEMPLATES = [
-  {v:'photo-text', l:'Фото слева · текст справа'},
-  {v:'text-photo', l:'Текст слева · фото справа'},
-  {v:'photo-photo',l:'Два фото'},
-  {v:'quote-photo',l:'Цитата · фото'},
-  {v:'zodiac',     l:'★ Зодиакальный разворот'}
-];
-
-/* ================================================================
-   УТИЛИТЫ
+   UTILS
    ================================================================ */
 const $  = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nl2br = s => esc(s).replace(/\n/g,'<br>');
+const uid = () => 't_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
 
-function esc(s){
-  return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-function nl2br(s){ return esc(s).replace(/\n/g,'<br>'); }
-function plural(n,a,b,c){
-  const n10=n%10, n100=n%100;
-  if(n10===1 && n100!==11) return a;
-  if(n10>=2 && n10<=4 && (n100<10||n100>=20)) return b;
-  return c;
-}
 function show(id){
-  $$('.screen').forEach(s=>s.classList.toggle('active', s.id===id));
+  $$('.screen').forEach(s => s.classList.toggle('active', s.id===id));
   window.scrollTo(0,0);
 }
 
 /* ================================================================
-   ⭐ INLINE SVG ОБЛОЖКИ (для корректного рендера в PDF)
+   STORAGE — IndexedDB (надёжно и много места)
    ================================================================ */
-let COVER_SVG_INLINE = '';
+const DB_NAME = 'vogue_personal';
+const DB_VERSION = 1;
+let dbPromise = null;
 
-async function preloadCoverSvg() {
-  if (COVER_SVG_INLINE) return COVER_SVG_INLINE;
+function openDB(){
+  if (dbPromise) return dbPromise;
+  dbPromise = new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains('templates')) db.createObjectStore('templates', {keyPath:'id'});
+      if (!db.objectStoreNames.contains('kv'))        db.createObjectStore('kv');
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror  = () => reject(req.error);
+  });
+  return dbPromise;
+}
 
-  const paths = ['templates/cover-01.svg', 'cover-01.svg'];
-  let svg = '';
+async function idbGetAll(store){
+  const db = await openDB();
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readonly');
+    const rq = tx.objectStore(store).getAll();
+    rq.onsuccess = () => res(rq.result || []);
+    rq.onerror   = () => rej(rq.error);
+  });
+}
+async function idbPut(store, value){
+  const db = await openDB();
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readwrite');
+    const rq = tx.objectStore(store).put(value);
+    rq.onsuccess = () => res();
+    rq.onerror   = () => rej(rq.error);
+  });
+}
+async function idbDelete(store, id){
+  const db = await openDB();
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readwrite');
+    const rq = tx.objectStore(store).delete(id);
+    rq.onsuccess = () => res();
+    rq.onerror   = () => rej(rq.error);
+  });
+}
+async function idbGet(store, key){
+  const db = await openDB();
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readonly');
+    const rq = tx.objectStore(store).get(key);
+    rq.onsuccess = () => res(rq.result);
+    rq.onerror   = () => rej(rq.error);
+  });
+}
+async function idbSet(store, key, value){
+  const db = await openDB();
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readwrite');
+    const rq = tx.objectStore(store).put(value, key);
+    rq.onsuccess = () => res();
+    rq.onerror   = () => rej(rq.error);
+  });
+}
 
-  for (const p of paths) {
-    try {
-      const res = await fetch(p);
-      if (!res.ok) continue;
-      svg = await res.text();
-      break;
-    } catch (e) { /* пробуем следующий путь */ }
-  }
+/* ================================================================
+   STATE
+   ================================================================ */
+const state = {
+  templates: [],     // {id, name, category, fileType, fileData, photoMode, zones[], txtColor, createdAt}
+  pageCount: 12,
+  pages: [],         // {templateId, photo, tl, tr, bl, br}
+  activeIndex: 0,
+  filter: 'Все'
+};
 
-  if (!svg) {
-    console.error('Не удалось загрузить SVG обложки. Проверь путь templates/cover-01.svg');
-    return '';
-  }
-
-  // Убираем width/height у корневого <svg>, добавляем класс и viewBox-fallback
-  svg = svg.replace(/<svg([^>]*)>/, (m, attrs) => {
+/* ================================================================
+   INLINE SVG HELPER — встраивает SVG как inline для html2canvas
+   ================================================================ */
+function inlineSvg(svgText){
+  return svgText.replace(/<svg([^>]*)>/, (m, attrs) => {
     let a = attrs
       .replace(/\swidth="[^"]*"/g, '')
       .replace(/\sheight="[^"]*"/g, '');
-    // Если нет viewBox — добавим
-    if (!/viewBox=/.test(a)) {
-      a += ' viewBox="0 0 2481 3507"';
-    }
-    a += ' class="cv-decor-inline" preserveAspectRatio="xMidYMid meet"';
+    if (!/viewBox=/.test(a)) a += ' viewBox="0 0 794 1123"';
+    a += ' class="tpl-decor" preserveAspectRatio="xMidYMid meet"';
     return '<svg' + a + '>';
   });
-
-  COVER_SVG_INLINE = svg;
-  return svg;
 }
 
 /* ================================================================
-   ГЕНЕРАЦИЯ HTML СТРАНИЦ
+   LOAD / SAVE TEMPLATES
    ================================================================ */
-
-/* ⭐ ОБЛОЖКА VOGUE — SVG вставляется как inline */
-function pageCover(){
-  const c = state.cover;
-  const photoStyle = c.photo ? `background-image:url('${c.photo}')` : '';
-  const decor = COVER_SVG_INLINE || '';
-  return '<div class="page cover-vogue">'
-    +   '<div class="cv-photo" style="'+photoStyle+'"></div>'
-    +   decor
-    +   '<div class="cv-name">'+ esc(c.name) +'</div>'
-    +   '<div class="cv-text-left">'+ esc(c.leftText) +'</div>'
-    +   '<div class="cv-text-right cv-text-right--love">'
-    +     '<h3>'+ esc(c.loveHead) +'</h3>'
-    +     '<p>'+ esc(c.loveBody) +'</p>'
-    +   '</div>'
-    +   '<div class="cv-text-right cv-text-right--life">'
-    +     '<h3>'+ esc(c.lifeHead) +'</h3>'
-    +     '<p>'+ esc(c.lifeBody) +'</p>'
-    +   '</div>'
-    + '</div>';
-}
-
-function photoDiv(src){
-  if(src) return '<div class="full-photo" style="background-image:url(\''+src+'\')"></div>';
-  return '<div class="full-photo empty"><span>Фото</span></div>';
-}
-
-function textPage(sp, no){
-  return '<div class="page page--text">'
-    + '<div class="kicker">'+ (esc(sp.kicker) || 'Редакционная съёмка') +'</div>'
-    + '<h2 class="headline">'+ (esc(sp.heading) || 'Заголовок разворота') +'</h2>'
-    + '<div class="rule"></div>'
-    + '<div class="body">'+ (nl2br(sp.text) || 'Ваш текст появится здесь.') +'</div>'
-    + '<div class="folio"><span>Vogue</span><span>'+ no +'</span></div>'
-    + '</div>';
-}
-
-function quotePage(sp, no){
-  return '<div class="page page--quote">'
-    + '<div class="quote-mark">&ldquo;</div>'
-    + '<div class="quote-text">'+ (esc(sp.heading) || 'Ваша цитата') +'</div>'
-    + '<div class="quote-author">'+ (esc(sp.text) || '— подпись') +'</div>'
-    + '<div class="folio"><span>Vogue</span><span>'+ no +'</span></div>'
-    + '</div>';
-}
-
-function zodiacLeft(sp, no){
-  const z = ZODIAC[sp.zodiac || 'aries'];
-  return '<div class="page page--zodiac-left">'
-    + '<div class="z-kicker">Зодиакальный разворот</div>'
-    + '<div class="z-sym">'+ z.sym +'</div>'
-    + '<div class="z-name">'+ z.name +'</div>'
-    + '<div class="z-dates">'+ z.dates +'</div>'
-    + '<div class="z-info">'
-    +   '<div class="z-row"><span>Стихия</span><b>'+ z.el +'</b></div>'
-    +   '<div class="z-row"><span>Планета</span><b>'+ z.pl +'</b></div>'
-    +   '<div class="z-row"><span>Цвет</span><b>'+ z.color +'</b></div>'
-    +   '<div class="z-row"><span>Камень</span><b>'+ z.stone +'</b></div>'
-    +   '<div class="z-row"><span>Числа</span><b>'+ z.nums +'</b></div>'
-    + '</div>'
-    + '<div class="folio folio--light"><span>Vogue</span><span>'+ no +'</span></div>'
-    + '</div>';
-}
-
-function zodiacRight(sp, no){
-  const z = ZODIAC[sp.zodiac || 'aries'];
-  const chips = z.traits.map(t=>'<span>'+t+'</span>').join('');
-  return '<div class="page page--text">'
-    + '<div class="kicker">Гороскоп · '+ z.name +'</div>'
-    + '<h2 class="headline">Ваш знак — '+ z.name +'</h2>'
-    + '<div class="rule"></div>'
-    + '<div class="body">'+ esc(z.text) +'</div>'
-    + '<div class="z-traits">'+ chips +'</div>'
-    + '<div class="folio"><span>Vogue</span><span>'+ no +'</span></div>'
-    + '</div>';
-}
-
-function pageBack(){
-  return '<div class="page page--back">'
-    + '<div class="back-masthead">VOGUE</div>'
-    + '<div class="back-text">'+ (esc(state.cover.name) || 'Персональное издание') +'<br>Личный выпуск · A4</div>'
-    + '</div>';
-}
-
-function spreadPages(sp, noL, noR){
-  const t = sp.tpl;
-  if(t === 'photo-text'){
-    return [ '<div class="page">'+photoDiv(sp.photoA)+'</div>', textPage(sp, noR) ];
+async function loadTemplates(){
+  try {
+    const list = await idbGetAll('templates');
+    state.templates = list.sort((a,b) => (a.createdAt||0) - (b.createdAt||0));
+  } catch(e){
+    console.warn('IndexedDB недоступен, использую память:', e);
+    state.templates = [];
   }
-  if(t === 'text-photo'){
-    return [ textPage(sp, noL), '<div class="page">'+photoDiv(sp.photoB)+'</div>' ];
-  }
-  if(t === 'photo-photo'){
-    return [ '<div class="page">'+photoDiv(sp.photoA)+'</div>', '<div class="page">'+photoDiv(sp.photoB)+'</div>' ];
-  }
-  if(t === 'quote-photo'){
-    return [ quotePage(sp, noL), '<div class="page">'+photoDiv(sp.photoB)+'</div>' ];
-  }
-  if(t === 'zodiac'){
-    return [ zodiacLeft(sp, noL), zodiacRight(sp, noR) ];
-  }
-  return [ '<div class="page"></div>', '<div class="page"></div>' ];
+  updateTplCount();
 }
 
-function buildPages(){
-  const pages = [ pageCover() ];
-  let no = 2;
-  state.spreads.forEach(function(sp){
-    const pair = spreadPages(sp, no, no + 1);
-    pages.push(pair[0], pair[1]);
-    no += 2;
+function updateTplCount(){
+  const n = state.templates.length;
+  $('#tpl-count').textContent = n;
+  $('#tpl-info').textContent = n + ' шаблон' + (n%10===1 && n%100!==11 ? '' : (n%10>=2 && n%10<=4 && (n%100<10||n%100>=20) ? 'а' : 'ов'));
+}
+
+/* ================================================================
+   TEMPLATES SCREEN — РЕНДЕР
+   ================================================================ */
+function renderTemplatesScreen(){
+  const box = $('#tpl-container');
+  if (state.templates.length === 0){
+    box.innerHTML = `
+      <div class="empty-state">
+        <div class="es-icon">◻</div>
+        <h3>У вас пока нет шаблонов</h3>
+        <p>Загрузите SVG из Figma или картинку — они сохранятся в этом браузере навсегда и будут доступны при создании журнала.</p>
+        <button class="btn btn--primary" id="btn-upload-tpl-empty">Загрузить первый шаблон</button>
+      </div>`;
+    $('#btn-upload-tpl-empty').addEventListener('click', openUpload);
+    return;
+  }
+  box.innerHTML = `<div class="tpl-grid">${state.templates.map(t => `
+    <div class="tpl-card" data-id="${t.id}">
+      <button class="tc-del" data-del="${t.id}" title="Удалить">✕</button>
+      <div class="tc-thumb"><div class="thumb-scaler">${renderTemplatePreview(t)}</div></div>
+      <div class="tc-meta">
+        <div class="tc-name">${esc(t.name)}</div>
+        <div class="tc-cat">${esc(t.category||'Без категории')}</div>
+      </div>
+    </div>
+  `).join('')}</div>`;
+
+  requestAnimationFrame(scaleThumbs);
+
+  box.querySelectorAll('[data-del]').forEach(btn => {
+    btn.addEventListener('click', async e => {
+      e.stopPropagation();
+      const id = btn.dataset.del;
+      const t = state.templates.find(x => x.id === id);
+      if (!confirm(`Удалить шаблон «${t?.name || ''}»?`)) return;
+      await idbDelete('templates', id);
+      await loadTemplates();
+      renderTemplatesScreen();
+    });
   });
-  pages.push(pageBack());
-  return pages;
+}
+
+function renderTemplatePreview(t){
+  // Отдаём превью: SVG inline или img с dataURL
+  const photo = `<div class="ph-full" style="background:#e9e5de;"></div>`;
+  const decor = t.fileType === 'svg'
+    ? inlineSvg(t.fileData)
+    : `<img class="tpl-decor-img" src="${t.fileData}" alt="">`;
+  return `<div class="page">${photo}${decor}</div>`;
+}
+
+function scaleThumbs(){
+  document.querySelectorAll('.tc-thumb').forEach(el => {
+    const w = el.clientWidth;
+    const s = w / 794;
+    const sc = el.querySelector('.thumb-scaler');
+    if (sc) sc.style.transform = `scale(${s})`;
+  });
 }
 
 /* ================================================================
-   ИНИЦИАЛИЗАЦИЯ РАЗВОРОТОВ
+   UPLOAD MODAL
    ================================================================ */
-function initSpreads(){
-  const n = (state.pageCount - 2) / 2;
-  const old = state.spreads || [];
-  const arr = [];
-  for(let i=0;i<n;i++){
-    arr.push(old[i] ? old[i] : {
-      tpl:'photo-text', photoA:null, photoB:null,
-      heading:'', text:'', kicker:'', zodiac:'aries'
-    });
-  }
-  state.spreads = arr;
+let uploadFileData = null;
+let uploadFileType = null;
 
-  let zi = -1;
-  for(let i=0;i<arr.length;i++){ if(arr[i].tpl === 'zodiac'){ zi = i; break; } }
-  if(zi === -1){
-    zi = Math.min(Math.floor(n/2), n-1);
-    arr[zi].tpl = 'zodiac';
-  }
-  if(!arr[zi].zodiac) arr[zi].zodiac = 'aries';
-  arr.forEach(function(s,i){ if(i !== zi && s.tpl === 'zodiac') s.tpl = 'photo-text'; });
+function openUpload(){
+  $('#upload-modal').classList.remove('hidden');
+  resetUploadForm();
 }
 
-/* ================================================================
-   РЕНДЕР ПАНЕЛИ УПРАВЛЕНИЯ
-   ================================================================ */
-function photoField(sp, slot, label){
-  const val = slot === 'a' ? sp.photoA : sp.photoB;
-  return '<div class="field">'
-    + '<span>'+ label +'</span>'
-    + '<div class="file-row">'
-    +   '<label class="file-btn"><input type="file" accept="image/*" data-act="photo" data-slot="'+slot+'" hidden><span>'
-    +     (val ? 'Заменить фото' : 'Выбрать файл')
-    +   '</span></label>'
-    +   (val ? '<button class="mini-btn" data-act="clear-photo" data-slot="'+slot+'">Удалить</button>' : '')
-    + '</div>'
-    + '</div>';
+function closeUpload(){
+  $('#upload-modal').classList.add('hidden');
 }
 
-function textFieldsHTML(sp){
-  return '<label class="field"><span>Надзаголовок (рубрика)</span>'
-    + '<input type="text" data-act="kicker" value="'+esc(sp.kicker)+'" placeholder="Редакционная съёмка"></label>'
-    + '<label class="field"><span>Заголовок</span>'
-    + '<input type="text" data-act="heading" value="'+esc(sp.heading)+'" placeholder="Тихая роскошь"></label>'
-    + '<label class="field"><span>Текст</span>'
-    + '<textarea data-act="text" rows="7" placeholder="Ваш текст…">'+esc(sp.text)+'</textarea></label>';
+function resetUploadForm(){
+  uploadFileData = null;
+  uploadFileType = null;
+  $('#dz-file').textContent = '';
+  $('#up-name').value = '';
+  $('#up-cat').value = '';
+  $('#up-photo').value = 'none';
+  $('#up-txtcolor').value = 'dark';
+  $$('#zone-chips .chip').forEach(chip => {
+    const on = chip.dataset.zone === 'tl' || chip.dataset.zone === 'bl';
+    chip.classList.toggle('on', on);
+    chip.querySelector('input').checked = on;
+  });
+  updateSaveBtn();
 }
 
-function fieldsHTML(sp){
-  const t = sp.tpl;
-  if(t === 'photo-text') return photoField(sp,'a','Фото — левая страница') + textFieldsHTML(sp);
-  if(t === 'text-photo') return photoField(sp,'b','Фото — правая страница') + textFieldsHTML(sp);
-  if(t === 'photo-photo') return photoField(sp,'a','Фото — левая страница') + photoField(sp,'b','Фото — правая страница');
-  if(t === 'quote-photo'){
-    return '<label class="field"><span>Цитата</span>'
-      + '<textarea data-act="heading" rows="4" placeholder="Красота — это то, что вы делаете каждый день">'+esc(sp.heading)+'</textarea></label>'
-      + '<label class="field"><span>Подпись</span>'
-      + '<input type="text" data-act="text" value="'+esc(sp.text)+'" placeholder="— Анна Соколова"></label>'
-      + photoField(sp,'b','Фото — правая страница');
-  }
-  if(t === 'zodiac'){
-    const cur = sp.zodiac || 'aries';
-    const opts = ZODIAC_ORDER.map(function(k){
-      const z = ZODIAC[k];
-      return '<option value="'+k+'"'+(cur===k?' selected':'')+'>'+z.sym+'  '+z.name+' · '+z.dates+'</option>';
-    }).join('');
-    return '<label class="field"><span>Знак зодиака</span><select data-act="zodiac">'+opts+'</select></label>'
-      + '<p class="hint">Разворот сформируется автоматически: символ, стихия, планета, цвет, камень, счастливые числа и персональный гороскоп.</p>';
-  }
-  return '';
+function updateSaveBtn(){
+  $('#upload-save').disabled = !(uploadFileData && $('#up-name').value.trim().length > 0);
 }
 
-function coverCard(){
-  const c = state.cover;
-  const el = document.createElement('div');
-  el.className = 'card';
-  el.innerHTML =
-    '<div class="card-head"><span class="card-title">Обложка · VOGUE Classic</span><span class="card-pages">Стр. 1</span></div>'
-    + '<div class="card-body">'
-    +   '<div class="field"><span>Фотография обложки</span>'
-    +     '<div class="file-row">'
-    +       '<label class="file-btn"><input type="file" accept="image/*" data-cover="photo" hidden><span>'
-    +         (c.photo ? 'Заменить фото' : 'Выбрать файл')
-    +       '</span></label>'
-    +       (c.photo ? '<button class="mini-btn" data-cover-clear="1">Удалить</button>' : '')
-    +     '</div>'
-    +   '</div>'
-    +   '<label class="field"><span>Имя на обложке</span>'
-    +     '<input type="text" data-cover="name" value="'+esc(c.name)+'" placeholder="ULIANA"></label>'
-    +   '<label class="field"><span>Левый блок (курсив)</span>'
-    +     '<textarea data-cover="leftText" rows="4">'+esc(c.leftText)+'</textarea></label>'
-    +   '<label class="field"><span>Love · заголовок</span>'
-    +     '<input type="text" data-cover="loveHead" value="'+esc(c.loveHead)+'"></label>'
-    +   '<label class="field"><span>Love · текст</span>'
-    +     '<textarea data-cover="loveBody" rows="3">'+esc(c.loveBody)+'</textarea></label>'
-    +   '<label class="field"><span>Life · заголовок</span>'
-    +     '<input type="text" data-cover="lifeHead" value="'+esc(c.lifeHead)+'"></label>'
-    +   '<label class="field"><span>Life · текст</span>'
-    +     '<textarea data-cover="lifeBody" rows="3">'+esc(c.lifeBody)+'</textarea></label>'
-    + '</div>';
-  return el;
-}
-
-function spreadCard(sp, i){
-  const noL = 2 + i*2, noR = noL + 1;
-  const el = document.createElement('div');
-  el.className = 'card';
-  const opts = TEMPLATES.map(function(t){
-    return '<option value="'+t.v+'"'+(sp.tpl===t.v?' selected':'')+'>'+t.l+'</option>';
-  }).join('');
-  el.innerHTML =
-    '<div class="card-head">'
-    +  '<span class="card-title">Разворот '+(i+1)+'</span>'
-    +  '<span class="card-pages">Стр. '+noL+'–'+noR+'</span>'
-    + '</div>'
-    + '<div class="card-body">'
-    +   '<label class="field"><span>Шаблон разворота</span>'
-    +     '<select data-i="'+i+'" data-act="tpl">'+opts+'</select></label>'
-    +   '<div class="fields" data-i="'+i+'">'+fieldsHTML(sp)+'</div>'
-    + '</div>';
-  return el;
-}
-
-function renderControls(){
-  const box = $('#controls');
-  box.innerHTML = '';
-  box.appendChild(coverCard());
-  state.spreads.forEach(function(sp,i){ box.appendChild(spreadCard(sp,i)); });
-
-  const total = state.pageCount;
-  const cnt = state.spreads.length;
-  $('#topbar-info').textContent = total + ' стр. · ' + cnt + ' ' + plural(cnt,'разворот','разворота','разворотов') + ' · A4';
-}
-
-/* ================================================================
-   ПРЕДПРОСМОТР
-   ================================================================ */
-let previewTimer = null;
-function schedulePreview(){
-  clearTimeout(previewTimer);
-  previewTimer = setTimeout(renderPreview, 160);
-}
-
-function renderPreview(){
-  const pages = buildPages();
-  const el = $('#preview');
-  let html = '';
-  for(let i=0;i<pages.length;i++){
-    html += '<div class="thumb">'
-      + '<div class="thumb-inner"><div class="thumb-scaler">'+pages[i]+'</div></div>'
-      + '<div class="thumb-label">Стр. '+(i+1)+'</div>'
-      + '</div>';
-  }
-  el.innerHTML = html;
-}
-
-/* ================================================================
-   СОБЫТИЯ
-   ================================================================ */
-document.addEventListener('input', function(e){
-  const t = e.target;
-
-  if(t.dataset && t.dataset.cover){
-    state.cover[t.dataset.cover] = t.value;
-    schedulePreview();
-    return;
-  }
-  if(t.dataset && t.dataset.act && t.closest('#controls')){
-    const act = t.dataset.act;
-    if(act === 'photo' || act === 'tpl' || act === 'zodiac' || act === 'clear-photo') return;
-    const holder = t.closest('[data-i]');
-    if(!holder) return;
-    const i = parseInt(holder.dataset.i, 10);
-    const sp = state.spreads[i];
-    if(!sp) return;
-    sp[act] = t.value;
-    schedulePreview();
-  }
+// Drop zone
+$('#drop-zone').addEventListener('click', () => $('#file-input').click());
+$('#drop-zone').addEventListener('dragover', e => { e.preventDefault(); $('#drop-zone').classList.add('dragover'); });
+$('#drop-zone').addEventListener('dragleave', () => $('#drop-zone').classList.remove('dragover'));
+$('#drop-zone').addEventListener('drop', e => {
+  e.preventDefault();
+  $('#drop-zone').classList.remove('dragover');
+  const f = e.dataTransfer.files[0];
+  if (f) handleFile(f);
+});
+$('#file-input').addEventListener('change', e => {
+  const f = e.target.files[0];
+  if (f) handleFile(f);
 });
 
-document.addEventListener('change', function(e){
-  const t = e.target;
-
-  /* файлы */
-  if(t.type === 'file'){
-    const file = t.files && t.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = function(){
-      if(t.dataset.cover){
-        state.cover[t.dataset.cover] = reader.result;
-        renderControls();
-        schedulePreview();
-      } else if(t.dataset.act === 'photo'){
-        const holder = t.closest('[data-i]');
-        const i = parseInt(holder.dataset.i, 10);
-        const sp = state.spreads[i];
-        if(!sp) return;
-        if(t.dataset.slot === 'a') sp.photoA = reader.result;
-        else sp.photoB = reader.result;
-        renderControls();
-        schedulePreview();
-      }
-    };
-    reader.readAsDataURL(file);
+function handleFile(file){
+  const isSvg = file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg');
+  const isImg = file.type.startsWith('image/');
+  if (!isSvg && !isImg){
+    alert('Поддерживаются только SVG, PNG и JPG.');
     return;
   }
-
-  /* шаблон */
-  if(t.dataset && t.dataset.act === 'tpl'){
-    const i = parseInt(t.dataset.i, 10);
-    handleTemplateChange(i, t.value);
-    return;
-  }
-
-  /* зодиак */
-  if(t.dataset && t.dataset.act === 'zodiac'){
-    const holder = t.closest('[data-i]');
-    const i = parseInt(holder.dataset.i, 10);
-    state.spreads[i].zodiac = t.value;
-    schedulePreview();
-    return;
-  }
-});
-
-document.addEventListener('click', function(e){
-  const clr = e.target.closest('[data-act="clear-photo"]');
-  if(clr){
-    const holder = clr.closest('[data-i]');
-    const i = parseInt(holder.dataset.i, 10);
-    const sp = state.spreads[i];
-    if(clr.dataset.slot === 'a') sp.photoA = null; else sp.photoB = null;
-    renderControls();
-    schedulePreview();
-    return;
-  }
-  const cc = e.target.closest('[data-cover-clear]');
-  if(cc){
-    state.cover.photo = null;
-    renderControls();
-    schedulePreview();
-  }
-});
-
-function handleTemplateChange(i, val){
-  if(val === 'zodiac'){
-    state.spreads.forEach(function(s,j){
-      if(j !== i && s.tpl === 'zodiac') s.tpl = 'photo-text';
-    });
-    state.spreads[i].tpl = 'zodiac';
-    if(!state.spreads[i].zodiac) state.spreads[i].zodiac = 'aries';
-  } else {
-    state.spreads[i].tpl = val;
-  }
-  renderControls();
-  schedulePreview();
+  const reader = new FileReader();
+  reader.onload = () => {
+    uploadFileData = reader.result;
+    uploadFileType = isSvg ? 'svg' : 'image';
+    $('#dz-file').textContent = `✓ ${file.name} (${(file.size/1024).toFixed(1)} КБ)`;
+    // Автоимена
+    if (!$('#up-name').value){
+      $('#up-name').value = file.name.replace(/\.[^.]+$/, '');
+    }
+    updateSaveBtn();
+  };
+  if (isSvg) reader.readAsText(file);
+  else       reader.readAsDataURL(file);
 }
 
+$('#up-name').addEventListener('input', updateSaveBtn);
+$('#upload-close').addEventListener('click', closeUpload);
+$('#upload-cancel').addEventListener('click', closeUpload);
+$('#upload-modal').addEventListener('click', e => { if (e.target === $('#upload-modal')) closeUpload(); });
+
+// Chips (zones)
+$$('#zone-chips .chip').forEach(chip => {
+  chip.addEventListener('click', e => {
+    e.preventDefault();
+    chip.classList.toggle('on');
+    chip.querySelector('input').checked = chip.classList.contains('on');
+  });
+});
+
+// Save
+$('#upload-save').addEventListener('click', async () => {
+  if (!uploadFileData) return;
+  const zones = $$('#zone-chips .chip.on').map(c => c.dataset.zone);
+  const tpl = {
+    id: uid(),
+    name: $('#up-name').value.trim(),
+    category: $('#up-cat').value.trim() || 'Прочее',
+    fileType: uploadFileType,
+    fileData: uploadFileData,
+    photoMode: $('#up-photo').value,
+    zones: zones,
+    txtColor: $('#up-txtcolor').value,
+    createdAt: Date.now()
+  };
+  try {
+    await idbPut('templates', tpl);
+  } catch(e){
+    alert('Не удалось сохранить: ' + e.message);
+    return;
+  }
+  await loadTemplates();
+  closeUpload();
+  renderTemplatesScreen();
+});
+
 /* ================================================================
-   ЭКРАН ВЫБОРА КОЛИЧЕСТВА СТРАНИЦ
+   PAGE COUNT SCREEN
    ================================================================ */
 function renderPageOptions(){
   const opts = [4,8,12,16,20,24,28,32,36,40];
-  $('#page-options').innerHTML = opts.map(function(n){
-    const k = (n-2)/2;
-    return '<button class="page-opt'+(n===state.pageCount?' active':'')+'" data-n="'+n+'">'
-      + '<b>'+n+'</b>'
-      + '<span>'+k+' '+plural(k,'разворот','разворота','разворотов')+'</span>'
-      + '</button>';
-  }).join('');
+  $('#page-options').innerHTML = opts.map(n =>
+    `<button class="page-opt ${n===state.pageCount?'active':''}" data-n="${n}">
+      <b>${n}</b><span>страниц</span>
+    </button>`).join('');
 }
-
-$('#page-options').addEventListener('click', function(e){
+$('#page-options').addEventListener('click', e => {
   const b = e.target.closest('.page-opt');
-  if(!b) return;
+  if (!b) return;
   state.pageCount = parseInt(b.dataset.n, 10);
   renderPageOptions();
 });
 
 /* ================================================================
-   НАВИГАЦИЯ
+   РЕНДЕР СТРАНИЦЫ A4 (шаблон + поля пользователя)
    ================================================================ */
-$('#btn-start').addEventListener('click', function(){
-  renderPageOptions();
-  show('screen-pages');
+function renderPage(page, no){
+  const tpl = state.templates.find(t => t.id === page.templateId);
+  if (!tpl) {
+    return `<div class="page">
+      <div class="ph-full empty"><span>Шаблон не выбран</span></div>
+    </div>`;
+  }
+
+  // Photo layer
+  let photoHTML = '';
+  const photoStyle = page.photo ? `background-image:url('${page.photo}')` : '';
+  if (tpl.photoMode === 'full'){
+    photoHTML = `<div class="ph-full ${page.photo?'':'empty'}" style="${photoStyle}">${page.photo?'':'<span>Фото</span>'}</div>`;
+  } else if (tpl.photoMode === 'left'){
+    photoHTML = `<div class="ph-left ${page.photo?'':'empty'}" style="${photoStyle}">${page.photo?'':'<span>Фото</span>'}</div>`;
+  } else if (tpl.photoMode === 'right'){
+    photoHTML = `<div class="ph-right ${page.photo?'':'empty'}" style="${photoStyle}">${page.photo?'':'<span>Фото</span>'}</div>`;
+  }
+
+  // Decor (SVG inline или img)
+  const decor = tpl.fileType === 'svg'
+    ? inlineSvg(tpl.fileData)
+    : `<img class="tpl-decor-img" src="${tpl.fileData}" alt="">`;
+
+  // Text zones
+  const colorCls = tpl.txtColor === 'light' ? 'light' : 'dark';
+  const textHTML = (tpl.zones || []).map(zone => {
+    const content = page[zone] || '';
+    if (!content.trim()) return '';
+    return `<div class="txt txt--${zone} ${colorCls}">${nl2br(content)}</div>`;
+  }).join('');
+
+  return `<div class="page">
+    ${photoHTML}
+    ${decor}
+    ${textHTML}
+    <div class="folio ${tpl.txtColor==='light'?'':'light'}"><span>Vogue</span><span>${no}</span></div>
+  </div>`;
+}
+
+/* ================================================================
+   INIT PAGES
+   ================================================================ */
+function initPages(){
+  const n = state.pageCount;
+  if (state.templates.length === 0) return;
+
+  // Умное заполнение: 1-й — обложка (категория "Обложки"), последний — задняя
+  const covers = state.templates.filter(t => t.category === 'Обложки');
+  const backs  = state.templates.filter(t => t.category === 'Задние обложки' || t.category === 'Обложки');
+  const others = state.templates.filter(t => t.category !== 'Обложки' && t.category !== 'Задние обложки');
+
+  const coverTpl = covers[0] || state.templates[0];
+  const backTpl  = backs.length ? backs[backs.length-1] : state.templates[state.templates.length-1];
+
+  const pages = [];
+  pages.push(blankPage(coverTpl.id));
+  for (let i = 0; i < n - 2; i++){
+    const t = others.length ? others[i % others.length] : state.templates[0];
+    pages.push(blankPage(t.id));
+  }
+  pages.push(blankPage(backTpl.id));
+
+  state.pages = pages;
+  state.activeIndex = 0;
+}
+
+function blankPage(templateId){
+  return { templateId, photo:null, tl:'', tr:'', bl:'', br:'' };
+}
+
+/* ================================================================
+   EDITOR RENDER
+   ================================================================ */
+function renderPageList(){
+  const ul = $('#page-list');
+  ul.innerHTML = state.pages.map((p, i) => {
+    const tpl = state.templates.find(t => t.id === p.templateId);
+    return `<li class="page-item ${i===state.activeIndex?'active':''}" data-index="${i}">
+      <span class="page-num">${i+1}</span>
+      <div class="page-thumb-mini"><div class="thumb-scaler">${renderPage(p, i+1)}</div></div>
+      <div class="page-meta"><div class="page-name">${esc(tpl?.name || 'Пусто')}</div></div>
+    </li>`;
+  }).join('');
+
+  requestAnimationFrame(() => {
+    $$('.page-thumb-mini').forEach(el => {
+      const w = el.clientWidth;
+      const s = w / 794;
+      const sc = el.querySelector('.thumb-scaler');
+      if (sc) sc.style.transform = `scale(${s})`;
+    });
+  });
+}
+
+function renderStage(){
+  const p = state.pages[state.activeIndex];
+  const tpl = state.templates.find(t => t.id === p.templateId);
+  $('#stage-title').textContent = `Страница ${state.activeIndex+1} из ${state.pages.length}`;
+  const wrap = $('#stage-preview');
+  wrap.innerHTML = `<div class="thumb-scaler">${renderPage(p, state.activeIndex+1)}</div>`;
+  requestAnimationFrame(() => {
+    const w = wrap.clientWidth;
+    const s = w / 794;
+    const sc = wrap.querySelector('.thumb-scaler');
+    if (sc) sc.style.transform = `scale(${s})`;
+    wrap.style.height = (1123 * s) + 'px';
+  });
+  $('#tpl-name').textContent = tpl?.name || '—';
+  $('#tpl-cat').textContent = tpl?.category || '';
+  renderFields();
+}
+
+function renderFields(){
+  const p = state.pages[state.activeIndex];
+  const tpl = state.templates.find(t => t.id === p.templateId);
+  const box = $('#form-fields');
+  if (!tpl){ box.innerHTML = ''; return; }
+
+  const zoneLabels = {
+    tl:'Текст · сверху слева',
+    tr:'Текст · сверху справа',
+    bl:'Текст · снизу слева',
+    br:'Текст · снизу справа'
+  };
+
+  let html = '';
+
+  if (tpl.photoMode !== 'none'){
+    const has = !!p.photo;
+    html += `<div class="field"><label>Фото</label>
+      <div class="file-row">
+        <label class="file-btn"><input type="file" accept="image/*" data-photo hidden>
+          <span>${has ? 'Заменить' : 'Загрузить фото'}</span></label>
+        ${has ? `<button class="mini-btn" data-photo-clear>Удалить</button>` : ''}
+      </div></div>`;
+  }
+
+  (tpl.zones || []).forEach(z => {
+    const val = p[z] || '';
+    // Показываем заголовок + многострочный текст (пользователь сам форматирует)
+    html += `<div class="field">
+      <label>${zoneLabels[z]}</label>
+      <textarea rows="4" data-text="${z}" placeholder="Введите текст…">${esc(val)}</textarea>
+    </div>`;
+  });
+
+  box.innerHTML = html;
+}
+
+function renderEditor(){
+  renderPageList();
+  renderStage();
+  $('#topbar-info').textContent = `${state.pages.length} стр. · A4`;
+}
+
+/* ================================================================
+   EDITOR EVENTS
+   ================================================================ */
+$('#page-list').addEventListener('click', e => {
+  const item = e.target.closest('.page-item');
+  if (!item) return;
+  state.activeIndex = parseInt(item.dataset.index, 10);
+  renderEditor();
 });
 
-$('#btn-back-1').addEventListener('click', function(){ show('screen-start'); });
-
-$('#btn-to-editor').addEventListener('click', async function(){
-  await preloadCoverSvg();
-  initSpreads();
-  renderControls();
-  renderPreview();
-  show('screen-editor');
+$('#form-fields').addEventListener('input', e => {
+  const t = e.target;
+  const p = state.pages[state.activeIndex];
+  if (t.dataset.text){
+    p[t.dataset.text] = t.value;
+    renderPageList();
+    renderStage();
+  }
 });
 
-$('#btn-back-2').addEventListener('click', function(){
-  renderPageOptions();
-  show('screen-pages');
+$('#form-fields').addEventListener('change', e => {
+  const t = e.target;
+  const p = state.pages[state.activeIndex];
+  if (t.dataset.photo){
+    const f = t.files && t.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => { p.photo = r.result; renderEditor(); };
+    r.readAsDataURL(f);
+  }
+});
+
+$('#form-fields').addEventListener('click', e => {
+  const clr = e.target.closest('[data-photo-clear]');
+  if (clr){
+    state.pages[state.activeIndex].photo = null;
+    renderEditor();
+  }
 });
 
 /* ================================================================
-   ГЕНЕРАЦИЯ PDF
+   GALLERY (выбор шаблона для страницы)
+   ================================================================ */
+function openGallery(){
+  if (state.templates.length === 0){
+    alert('Сначала загрузите хотя бы один шаблон.');
+    return;
+  }
+  state.filter = 'Все';
+  renderCategories();
+  renderGallery();
+  $('#modal-page-label').textContent = `· страница ${state.activeIndex+1}`;
+  $('#gallery-modal').classList.remove('hidden');
+}
+
+function closeGallery(){
+  $('#gallery-modal').classList.add('hidden');
+}
+
+function getCategories(){
+  return ['Все', ...new Set(state.templates.map(t => t.category))];
+}
+
+function renderCategories(){
+  $('#category-filter').innerHTML = getCategories().map(c =>
+    `<button class="cat-chip ${state.filter===c?'active':''}" data-cat="${esc(c)}">${esc(c)}</button>`
+  ).join('');
+}
+
+function renderGallery(){
+  const curTpl = state.pages[state.activeIndex].templateId;
+  let list = state.templates;
+  if (state.filter !== 'Все') list = list.filter(t => t.category === state.filter);
+
+  $('#gallery-grid').innerHTML = list.map(t => `
+    <div class="gallery-item ${t.id===curTpl?'active-tpl':''}" data-tpl="${t.id}">
+      <div class="thumb-wrap"><div class="thumb-scaler">${renderTemplatePreview(t)}</div></div>
+      <div class="g-meta">
+        <div class="g-name">${esc(t.name)}</div>
+        <div class="g-cat">${esc(t.category)}</div>
+      </div>
+    </div>`).join('');
+
+  requestAnimationFrame(() => {
+    $$('.gallery-item .thumb-wrap').forEach(el => {
+      const w = el.clientWidth;
+      const s = w / 794;
+      const sc = el.querySelector('.thumb-scaler');
+      if (sc) sc.style.transform = `scale(${s})`;
+    });
+  });
+}
+
+function applyTemplate(tplId){
+  const p = state.pages[state.activeIndex];
+  p.templateId = tplId;
+  closeGallery();
+  renderEditor();
+}
+
+$('#btn-change-tpl').addEventListener('click', openGallery);
+$('#modal-close').addEventListener('click', closeGallery);
+$('#gallery-modal').addEventListener('click', e => { if (e.target === $('#gallery-modal')) closeGallery(); });
+$('#category-filter').addEventListener('click', e => {
+  const chip = e.target.closest('.cat-chip');
+  if (!chip) return;
+  state.filter = chip.dataset.cat;
+  renderCategories();
+  renderGallery();
+});
+$('#gallery-grid').addEventListener('click', e => {
+  const item = e.target.closest('.gallery-item');
+  if (!item) return;
+  applyTemplate(item.dataset.tpl);
+});
+
+/* ================================================================
+   NAVIGATION
+   ================================================================ */
+$('#btn-my-templates').addEventListener('click', () => {
+  renderTemplatesScreen();
+  show('screen-templates');
+});
+$('#btn-tpl-home').addEventListener('click', () => show('screen-start'));
+$('#btn-upload-tpl').addEventListener('click', openUpload);
+$('#btn-create').addEventListener('click', () => {
+  if (state.templates.length === 0){
+    renderTemplatesScreen();
+    show('screen-templates');
+    setTimeout(openUpload, 250);
+    return;
+  }
+  renderPageOptions();
+  show('screen-pages');
+});
+$('#btn-back-1').addEventListener('click', () => show('screen-start'));
+$('#btn-editor-back').addEventListener('click', () => { renderPageOptions(); show('screen-pages'); });
+$('#btn-to-editor').addEventListener('click', () => {
+  initPages();
+  renderEditor();
+  show('screen-editor');
+});
+
+/* ================================================================
+   PDF
    ================================================================ */
 $('#btn-pdf').addEventListener('click', downloadPDF);
 
 async function downloadPDF(){
   const btn = $('#btn-pdf');
-  const status = $('#pdf-status');
   const holder = $('#render-holder');
-
   btn.disabled = true;
-  status.textContent = 'Подготовка…';
+  btn.textContent = 'Готовим…';
   holder.innerHTML = '';
 
-  // На всякий случай убедимся, что SVG загружен
-  await preloadCoverSvg();
-
-  const pagesHTML = buildPages();
-  const nodes = pagesHTML.map(function(h){
+  const nodes = state.pages.map((p, i) => {
     const d = document.createElement('div');
-    d.innerHTML = h.trim();
+    d.innerHTML = renderPage(p, i+1).trim();
     const node = d.firstElementChild;
     holder.appendChild(node);
     return node;
   });
 
-  await new Promise(function(r){ setTimeout(r, 500); });
+  await new Promise(r => setTimeout(r, 400));
 
-  const jsPDFCtor = window.jspdf.jsPDF;
-  const pdf = new jsPDFCtor({unit:'mm', format:'a4', orientation:'portrait', compress:true});
+  const pdf = new window.jspdf.jsPDF({unit:'mm', format:'a4', orientation:'portrait', compress:true});
 
-  try{
-    for(let i=0;i<nodes.length;i++){
-      status.textContent = 'Страница ' + (i+1) + ' из ' + nodes.length + '…';
-      await new Promise(function(r){ setTimeout(r, 0); });
-
+  try {
+    for (let i=0;i<nodes.length;i++){
+      btn.textContent = `Стр. ${i+1}/${nodes.length}`;
+      await new Promise(r => setTimeout(r, 0));
       const canvas = await html2canvas(nodes[i], {
-        scale: 2,
-        backgroundColor: '#ffffff',
-        logging: false,
-        useCORS: true,
-        width: 794,
-        height: 1123,
-        windowWidth: 794,
-        windowHeight: 1123
+        scale:2, backgroundColor:'#ffffff', logging:false, useCORS:true,
+        width:794, height:1123, windowWidth:794, windowHeight:1123
       });
-
       const img = canvas.toDataURL('image/jpeg', 0.92);
-      if(i > 0) pdf.addPage();
+      if (i > 0) pdf.addPage();
       pdf.addImage(img, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
     }
-
-    const safe = (state.cover.name || 'журнал').replace(/[^\wа-яА-ЯёЁ\-]+/g,'_');
-    pdf.save('VOGUE_' + safe + '.pdf');
-    status.textContent = 'Готово ✓';
-  }catch(err){
+    pdf.save('VOGUE_journal.pdf');
+    btn.textContent = 'Готово ✓';
+  } catch(err){
     console.error(err);
-    status.textContent = 'Ошибка генерации';
-  }finally{
+    btn.textContent = 'Ошибка';
+  } finally {
     holder.innerHTML = '';
-    btn.disabled = false;
-    setTimeout(function(){ status.textContent = ''; }, 4000);
+    setTimeout(() => { btn.disabled = false; btn.textContent = 'Скачать PDF'; }, 1500);
   }
 }
 
 /* ================================================================
-   СТАРТ
+   BOOT
    ================================================================ */
-initSpreads();
-
-/* Предзагружаем SVG обложки при старте — чтобы к моменту рендера
-   он уже был inline и корректно попал в PDF */
-preloadCoverSvg();
+(async function boot(){
+  await loadTemplates();
+  updateTplCount();
+  renderTemplatesScreen();
+})();
 </script>
 </body>
 </html>
