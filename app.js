@@ -1,0 +1,414 @@
+/* ============================================================
+   ЛОГИКА ПРИЛОЖЕНИЯ
+   ============================================================ */
+
+import { TEMPLATES, getTemplate, getCategories } from './templates/registry.js';
+
+const $  = (s,r=document) => r.querySelector(s);
+const $$ = (s,r=document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s==null?'':s)
+  .replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function show(id){
+  $$('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+  window.scrollTo(0,0);
+}
+
+/* ============================================================
+   СОСТОЯНИЕ
+   ============================================================ */
+const state = {
+  pageCount: 12,
+  pages: [],         // [{ templateId, content }]
+  activeIndex: 0,
+  filter: 'Все'
+};
+
+function blankPage(templateId){
+  const tpl = getTemplate(templateId);
+  return {
+    templateId,
+    content: tpl ? {...tpl.defaults} : {}
+  };
+}
+
+/* ============================================================
+   РЕНДЕР ОДНОЙ СТРАНИЦЫ
+   ============================================================ */
+function renderPage(page, no){
+  const tpl = getTemplate(page.templateId);
+  if (!tpl){
+    return `<div class="page" style="background:#f4f1ec;">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;">
+        <div style="font-family:'Playfair Display',serif;font-size:24px;color:#a49c90;">Шаблон не выбран</div>
+        <div style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#c0b8aa;">Нажмите «Сменить шаблон»</div>
+      </div>
+    </div>`;
+  }
+  return tpl.render(page.content || {}, no);
+}
+
+/* ============================================================
+   ИНИЦИАЛИЗАЦИЯ ЖУРНАЛА
+   ============================================================ */
+function initPages(){
+  const n = state.pageCount;
+  const covers = TEMPLATES.filter(t => t.category === 'Обложки');
+  const backs  = TEMPLATES.filter(t => t.category === 'Задние обложки');
+  const others = TEMPLATES.filter(t =>
+    t.category !== 'Обложки' && t.category !== 'Задние обложки'
+  );
+
+  const coverTpl = covers[0] || TEMPLATES[0] || null;
+  const backTpl  = backs[0]  || TEMPLATES[TEMPLATES.length-1] || null;
+
+  const pages = [];
+
+  // Первая страница — обложка
+  if (coverTpl) pages.push(blankPage(coverTpl.id));
+  else          pages.push({ templateId:null, content:{} });
+
+  // Середина
+  for (let i = 0; i < n - 2; i++){
+    if (others.length){
+      pages.push(blankPage(others[i % others.length].id));
+    } else if (TEMPLATES.length){
+      pages.push(blankPage(TEMPLATES[i % TEMPLATES.length].id));
+    } else {
+      pages.push({ templateId:null, content:{} });
+    }
+  }
+
+  // Последняя — задняя обложка
+  if (backTpl) pages.push(blankPage(backTpl.id));
+  else         pages.push({ templateId:null, content:{} });
+
+  state.pages = pages;
+  state.activeIndex = 0;
+}
+
+/* ============================================================
+   РЕНДЕР РЕДАКТОРА
+   ============================================================ */
+function renderPageList(){
+  $('#page-list').innerHTML = state.pages.map((p, i) => {
+    const tpl = getTemplate(p.templateId);
+    return `<li class="page-item ${i===state.activeIndex?'active':''}" data-index="${i}">
+      <span class="page-num">${i+1}</span>
+      <div class="page-thumb-mini">
+        <div class="thumb-scaler">${renderPage(p, i+1)}</div>
+      </div>
+      <div class="page-name">${esc(tpl?.name || 'Пусто')}</div>
+    </li>`;
+  }).join('');
+
+  requestAnimationFrame(() => {
+    $$('.page-thumb-mini').forEach(el => {
+      const s = el.clientWidth / 794;
+      const sc = el.querySelector('.thumb-scaler');
+      if (sc) sc.style.transform = `scale(${s})`;
+    });
+  });
+}
+
+function renderStage(){
+  const p = state.pages[state.activeIndex];
+  const tpl = getTemplate(p.templateId);
+
+  $('#stage-title').textContent =
+    `Страница ${state.activeIndex+1} из ${state.pages.length}`;
+
+  const wrap = $('#stage-preview');
+  wrap.innerHTML = `<div class="thumb-scaler">${renderPage(p, state.activeIndex+1)}</div>`;
+
+  requestAnimationFrame(() => {
+    const s = wrap.clientWidth / 794;
+    const sc = wrap.querySelector('.thumb-scaler');
+    if (sc) sc.style.transform = `scale(${s})`;
+    wrap.style.height = (1123 * s) + 'px';
+  });
+
+  $('#tpl-name').textContent = tpl?.name || '—';
+  $('#tpl-cat').textContent = tpl?.category || '';
+  renderFields();
+}
+
+function renderFields(){
+  const p = state.pages[state.activeIndex];
+  const tpl = getTemplate(p.templateId);
+  const box = $('#form-fields');
+
+  if (!tpl){
+    box.innerHTML = '<p style="color:#8a8378;font-size:13px;line-height:1.6;">Шаблон не выбран. Нажмите «Сменить шаблон», чтобы выбрать.</p>';
+    return;
+  }
+  if (!tpl.fields || !tpl.fields.length){
+    box.innerHTML = '<p style="color:#8a8378;font-size:13px;">У этого шаблона нет редактируемых полей.</p>';
+    return;
+  }
+
+  box.innerHTML = tpl.fields.map(f => {
+    const val = p.content[f.key] ?? '';
+
+    if (f.type === 'image'){
+      const has = !!val;
+      return `<div class="field"><label>${esc(f.label)}</label>
+        <div class="file-row">
+          <label class="file-btn">
+            <input type="file" accept="image/*" data-photo="${f.key}" hidden>
+            <span>${has ? 'Заменить' : 'Загрузить фото'}</span>
+          </label>
+          ${has ? `<button class="mini-btn" data-photo-clear="${f.key}">Удалить</button>` : ''}
+        </div></div>`;
+    }
+
+    if (f.type === 'textarea'){
+      return `<div class="field"><label>${esc(f.label)}</label>
+        <textarea rows="4" data-text="${f.key}">${esc(val)}</textarea></div>`;
+    }
+
+    return `<div class="field"><label>${esc(f.label)}</label>
+      <input type="text" data-text="${f.key}" value="${esc(val)}"></div>`;
+  }).join('');
+}
+
+function renderEditor(){
+  renderPageList();
+  renderStage();
+  $('#topbar-info').textContent = `${state.pages.length} стр. · A4`;
+}
+
+/* ============================================================
+   ГАЛЕРЕЯ ШАБЛОНОВ
+   ============================================================ */
+function openGallery(){
+  if (!TEMPLATES.length){
+    alert('Пока нет ни одного шаблона. Добавьте их в templates/registry.js');
+    return;
+  }
+  state.filter = 'Все';
+  renderCategories();
+  renderGallery();
+  $('#modal-page-label').textContent = `· страница ${state.activeIndex+1}`;
+  $('#gallery-modal').classList.remove('hidden');
+}
+function closeGallery(){
+  $('#gallery-modal').classList.add('hidden');
+}
+
+function renderCategories(){
+  $('#category-filter').innerHTML = getCategories().map(c =>
+    `<button class="cat-chip ${state.filter===c?'active':''}" data-cat="${esc(c)}">${esc(c)}</button>`
+  ).join('');
+}
+
+function renderGallery(){
+  const curId = state.pages[state.activeIndex].templateId;
+  let list = TEMPLATES;
+  if (state.filter !== 'Все') list = list.filter(t => t.category === state.filter);
+
+  $('#gallery-grid').innerHTML = list.map(t => {
+    const sample = { templateId: t.id, content: {...t.defaults} };
+    return `<div class="gallery-item ${t.id===curId?'active-tpl':''}" data-tpl="${t.id}">
+      <div class="thumb-wrap"><div class="thumb-scaler">${renderPage(sample, 1)}</div></div>
+      <div class="g-meta">
+        <div class="g-name">${esc(t.name)}</div>
+        <div class="g-cat">${esc(t.category)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  requestAnimationFrame(() => {
+    $$('.gallery-item .thumb-wrap').forEach(el => {
+      const s = el.clientWidth / 794;
+      const sc = el.querySelector('.thumb-scaler');
+      if (sc) sc.style.transform = `scale(${s})`;
+    });
+  });
+}
+
+function applyTemplate(tplId){
+  const p = state.pages[state.activeIndex];
+  const newTpl = getTemplate(tplId);
+  if (!newTpl) return;
+
+  // Переносим совпадающие ключи, остальное — defaults
+  const newContent = {...newTpl.defaults};
+  Object.keys(p.content || {}).forEach(k => {
+    if (k in newContent) newContent[k] = p.content[k];
+  });
+
+  p.templateId = tplId;
+  p.content = newContent;
+  closeGallery();
+  renderEditor();
+}
+
+/* ============================================================
+   СОБЫТИЯ
+   ============================================================ */
+$('#page-list').addEventListener('click', e => {
+  const item = e.target.closest('.page-item');
+  if (!item) return;
+  state.activeIndex = parseInt(item.dataset.index, 10);
+  renderEditor();
+});
+
+$('#form-fields').addEventListener('input', e => {
+  const t = e.target;
+  const p = state.pages[state.activeIndex];
+  if (t.dataset.text){
+    p.content[t.dataset.text] = t.value;
+    renderPageList();
+    renderStage();
+  }
+});
+
+$('#form-fields').addEventListener('change', e => {
+  const t = e.target;
+  const p = state.pages[state.activeIndex];
+
+  if (t.dataset.photo){
+    const f = t.files && t.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      p.content[t.dataset.photo] = r.result;
+      renderEditor();
+    };
+    r.readAsDataURL(f);
+  }
+
+  if (t.dataset.text){
+    p.content[t.dataset.text] = t.value;
+    renderPageList();
+    renderStage();
+  }
+});
+
+$('#form-fields').addEventListener('click', e => {
+  const c = e.target.closest('[data-photo-clear]');
+  if (c){
+    state.pages[state.activeIndex].content[c.dataset.photoClear] = null;
+    renderEditor();
+  }
+});
+
+$('#btn-change-tpl').addEventListener('click', openGallery);
+$('#modal-close').addEventListener('click', closeGallery);
+$('#gallery-modal').addEventListener('click', e => {
+  if (e.target === $('#gallery-modal')) closeGallery();
+});
+$('#category-filter').addEventListener('click', e => {
+  const chip = e.target.closest('.cat-chip');
+  if (!chip) return;
+  state.filter = chip.dataset.cat;
+  renderCategories();
+  renderGallery();
+});
+$('#gallery-grid').addEventListener('click', e => {
+  const item = e.target.closest('.gallery-item');
+  if (!item) return;
+  applyTemplate(item.dataset.tpl);
+});
+
+/* ============================================================
+   ВЫБОР КОЛИЧЕСТВА СТРАНИЦ
+   ============================================================ */
+function renderPageOptions(){
+  const opts = [4,8,12,16,20,24,28,32,36,40];
+  $('#page-options').innerHTML = opts.map(n =>
+    `<button class="page-opt ${n===state.pageCount?'active':''}" data-n="${n}">
+      <b>${n}</b><span>страниц</span>
+    </button>`).join('');
+}
+$('#page-options').addEventListener('click', e => {
+  const b = e.target.closest('.page-opt');
+  if (!b) return;
+  state.pageCount = parseInt(b.dataset.n, 10);
+  renderPageOptions();
+});
+
+/* ============================================================
+   НАВИГАЦИЯ
+   ============================================================ */
+$('#btn-start').addEventListener('click', () => {
+  renderPageOptions();
+  show('screen-pages');
+});
+$('#btn-back-1').addEventListener('click', () => show('screen-start'));
+$('#btn-editor-back').addEventListener('click', () => {
+  renderPageOptions();
+  show('screen-pages');
+});
+$('#btn-to-editor').addEventListener('click', async () => {
+  // Предзагрузка шаблонов (у кого есть метод preload)
+  for (const t of TEMPLATES){
+    if (typeof t.preload === 'function'){
+      try { await t.preload(); } catch(e){ console.warn('preload failed', t.id, e); }
+    }
+  }
+  initPages();
+  renderEditor();
+  show('screen-editor');
+});
+
+/* ============================================================
+   PDF
+   ============================================================ */
+$('#btn-pdf').addEventListener('click', downloadPDF);
+
+async function downloadPDF(){
+  const btn = $('#btn-pdf');
+  const holder = $('#render-holder');
+  btn.disabled = true;
+  btn.textContent = 'Готовим…';
+  holder.innerHTML = '';
+
+  // Рендерим все страницы в A4-ноды
+  const nodes = state.pages.map((p, i) => {
+    const d = document.createElement('div');
+    d.innerHTML = renderPage(p, i+1).trim();
+    const node = d.firstElementChild;
+    holder.appendChild(node);
+    return node;
+  });
+
+  await new Promise(r => setTimeout(r, 400));
+
+  const pdf = new window.jspdf.jsPDF({
+    unit:'mm', format:'a4', orientation:'portrait', compress:true
+  });
+
+  try {
+    for (let i=0;i<nodes.length;i++){
+      btn.textContent = `Стр. ${i+1}/${nodes.length}`;
+      await new Promise(r => setTimeout(r, 0));
+
+      const canvas = await html2canvas(nodes[i], {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        logging: false,
+        useCORS: true,
+        width: 794, height: 1123,
+        windowWidth: 794, windowHeight: 1123
+      });
+
+      const img = canvas.toDataURL('image/jpeg', 0.92);
+      if (i > 0) pdf.addPage();
+      pdf.addImage(img, 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+    }
+
+    pdf.save('VOGUE_journal.pdf');
+    btn.textContent = 'Готово ✓';
+  } catch(err){
+    console.error(err);
+    btn.textContent = 'Ошибка';
+  } finally {
+    holder.innerHTML = '';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = 'Скачать PDF';
+    }, 1500);
+  }
+}
