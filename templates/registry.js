@@ -8,6 +8,10 @@
    ============================================================ */
 
 import t01 from './01-birthday-vogue.js';
+import t02 from './02-whos-that-girl.js';
+
+
+
 
 // ⬇️ Импортируй новые здесь, по мере готовности
 // import t02 from './02-....js';
@@ -15,8 +19,7 @@ import t01 from './01-birthday-vogue.js';
 
 export const TEMPLATES = [
   t01,
-  // ⬇️ И добавляй их сюда
-  // t02, t03,
+  t02,
 ];
 
 export const getTemplate = id => TEMPLATES.find(t => t.id === id);
