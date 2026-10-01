@@ -1,3 +1,8 @@
+/* ============================================================
+   ШАБЛОН 07 — BESTIES
+   Figma Frame 2714
+   Нижние 2 строки — с эффектом "рукописного" контура (SVG filter)
+   ============================================================ */
 export default {
   id: 'besties',
   name: 'Besties',
@@ -17,10 +22,28 @@ export default {
     const p = k => c[k] ? `background-image:url('${c[k]}')` : '';
     const e = k => c[k] ? '' : 'empty';
     const w = c.word || 'BESTIES';
+
+    // SVG-фильтр для эффекта "дрожащей руки"
+    const svgFilter = `
+      <svg width="0" height="0" style="position:absolute">
+        <defs>
+          <filter id="scribble" x="-5%" y="-5%" width="110%" height="110%">
+            <feTurbulence type="turbulence" baseFrequency="0.028" numOctaves="2" seed="3" result="turb"/>
+            <feDisplacementMap in="SourceGraphic" in2="turb" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+          <filter id="scribble2" x="-5%" y="-5%" width="110%" height="110%">
+            <feTurbulence type="turbulence" baseFrequency="0.035" numOctaves="2" seed="7" result="turb"/>
+            <feDisplacementMap in="SourceGraphic" in2="turb" scale="3.8" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
+      </svg>`;
+
     return `<div class="page best-page">
+      ${svgFilter}
       <div class="best-title best-title--solid">${w}</div>
       <div class="best-title best-title--outline o1">${w}</div>
       <div class="best-title best-title--outline o2">${w}</div>
+
       <div class="best-grid">
         <div class="bg-item bg-a ${e('photo1')}" style="${p('photo1')}"></div>
         <div class="bg-item bg-b ${e('photo2')}" style="${p('photo2')}"></div>
@@ -28,6 +51,7 @@ export default {
         <div class="bg-item bg-d ${e('photo4')}" style="${p('photo4')}"></div>
         <div class="bg-item bg-e ${e('photo5')}" style="${p('photo5')}"></div>
       </div>
+
       <div class="best-quote">${c.quote || ''}</div>
     </div>`;
   }
