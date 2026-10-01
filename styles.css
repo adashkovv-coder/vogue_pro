@@ -1109,53 +1109,6 @@ button{font-family:inherit; cursor:pointer; border:none; background:none;}
   color: #000;
 }
 
-/* ═══════════════════ ШАБЛОН 19 — PINTEREST BOARD ═══════════════════ */
-.pinterest-page{
-  background: #fff;
-  padding: 40px 36px;
-  font-family: 'Times New Roman', Georgia, serif;
-  color: #000;
-}
-.pin-title{
-  text-align: center;
-  margin-bottom: 30px;
-}
-.pin-title-bold{
-  font-size: 62px;
-  font-weight: 700;
-  line-height: 1.05;
-  margin-bottom: 4px;
-}
-.pin-title-line{
-  font-size: 62px;
-  font-weight: 400;
-  line-height: 1.05;
-}
-.pin-grid{
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 175px;
-  gap: 14px;
-}
-.pin-item{
-  background-size: cover;
-  background-position: center;
-  background-color: #f0ede8;
-  border-radius: 24px;
-}
-.pin-item.empty{ background: #f0ede8; }
-.pin-1{ grid-column: 1; grid-row: 1; }
-.pin-2{ grid-column: 2; grid-row: 1 / 3; }
-.pin-3{ grid-column: 3 / 5; grid-row: 1; }
-.pin-4{ grid-column: 1; grid-row: 2 / 4; }
-.pin-5{ grid-column: 3; grid-row: 2 / 4; }
-.pin-6{ grid-column: 4; grid-row: 2 / 4; }
-.pin-7{ grid-column: 1; grid-row: 4 / 6; }
-.pin-8{ grid-column: 2; grid-row: 3 / 5; }
-.pin-9{ grid-column: 3; grid-row: 4 / 5; }
-.pin-10{ grid-column: 3 / 5; grid-row: 5 / 7; }
-.pin-11{ grid-column: 1; grid-row: 6 / 8; }
-
 /* ═══════════════════ ШАБЛОН 20 — ДРУЖБА СКВОЗЬ ГОДА ═══════════════════ */
 .friendship-page{
   background: #000;
@@ -1694,4 +1647,113 @@ button{font-family:inherit; cursor:pointer; border:none; background:none;}
   margin-top: 0;
   flex-shrink: 0;
   background: #fff;
+}
+
+/* ═══════════════════ ШАБЛОН 19 — PINTEREST BOARD (v2, абсолют) ═══════════════════ */
+.pinterest-page{
+  background: #fff;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Times New Roman', Georgia, serif;
+  color: #000;
+}
+
+/* ─── ЗАГОЛОВОК ─── */
+.pin-title{
+  position: absolute;
+  top: 26px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 5;
+  line-height: 1.02;
+}
+.pin-title-bold{
+  font-size: 54px;
+  font-weight: 700;
+  letter-spacing: -.005em;
+  margin-bottom: 2px;
+}
+.pin-title-line{
+  font-size: 54px;
+  font-weight: 400;
+  letter-spacing: -.005em;
+}
+
+/* ─── ФОТО — точные координаты из Figma (× 0.32) ─── */
+.pin-item{
+  position: absolute;
+  background-size: cover;
+  background-position: center;
+  background-color: #f0ede8;
+  border-radius: 26px;
+}
+.pin-item.empty{
+  background: #f0ede8;
+  position: absolute;
+}
+.pin-item.empty::after{
+  content: 'ФОТО';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: .3em;
+  color: #c0b8aa;
+}
+
+/* Координаты: left, top, width, height (все /3.125) */
+.pin-1  { left: 525px; top: 181px; width: 205px; height: 205px; }
+.pin-2  { left:  64px; top: 402px; width: 183px; height: 183px; }
+.pin-3  { left:  64px; top: 831px; width: 190px; height: 190px; }
+.pin-4  { left:  68px; top: 181px; width: 170px; height: 180px; }
+.pin-5  { left: 282px; top: 174px; width: 199px; height: 199px; }
+.pin-6  { left: 499px; top: 409px; width: 231px; height: 231px; }
+.pin-7  { left:  64px; top: 625px; width: 174px; height: 174px; }
+.pin-8  { left: 267px; top: 402px; width: 212px; height: 209px; }
+.pin-9  { left: 267px; top: 826px; width: 201px; height: 201px; }
+.pin-10 { left: 487px; top: 675px; width: 243px; height: 352px; }
+.pin-11 { left: 261px; top: 640px; width: 206px; height: 147px; }
+
+/* ═══════════════════ ШАБЛОН 25 — BACK BIRTHDAY ═══════════════════ */
+.back-bday-page{
+  background: #1a1f14;
+  position: relative;
+  overflow: hidden;
+}
+.bb-photo{
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-color: #2a3320;
+}
+.bb-photo.empty{ background: #2a3320; }
+
+.bb-title{
+  position: absolute;
+  top: 52px;
+  left: 22px;
+  font-family: 'Modern No 20', 'Playfair Display', Georgia, serif;
+  font-size: 96px;
+  font-weight: 400;
+  color: #fff;
+  letter-spacing: .01em;
+  line-height: 1;
+  text-shadow: 0 2px 20px rgba(0,0,0,.5);
+  z-index: 5;
+}
+.bb-subtitle{
+  position: absolute;
+  top: 140px;
+  left: 22px;
+  font-family: 'Petit Formal Script', cursive;
+  font-size: 32px;
+  line-height: 1.2;
+  color: #fff;
+  text-shadow: 0 1px 14px rgba(0,0,0,.5);
+  z-index: 5;
 }
