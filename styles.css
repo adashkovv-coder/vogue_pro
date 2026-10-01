@@ -507,3 +507,53 @@ button{font-family:inherit; cursor:pointer; border:none; background:none;}
   text-align:justify;
   hyphens:auto;
 }
+
+/* ============================================================
+   ШАБЛОН 05 — LOVE QUOTE
+   ============================================================ */
+.love-quote {
+  background: #3B0A14; /* Глубокий бордовый */
+  color: #E8D5B7;      /* Тёплый кремовый */
+  font-family: 'Playfair Display', serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Общий стиль для крупных букв */
+.lq-text {
+  position: absolute;
+  font-style: italic;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+/* Настройки для каждой части "ЛЮБОВЬ" */
+.lq-text--1 {
+  top: 90px;
+  left: 119px;
+  font-size: 128px;
+}
+.lq-text--2 {
+  top: 337px;
+  left: 175px;
+  font-size: 160px;
+  font-style: normal; /* Прямое начертание для центральной части */
+}
+.lq-text--3 {
+  top: 584px;
+  left: 143px;
+  font-size: 128px;
+}
+
+/* Стиль для цитаты */
+.lq-quote {
+  position: absolute;
+  top: 393px;
+  left: 64px;
+  width: 220px;
+  font-size: 22px;
+  font-style: italic;
+  line-height: 1.45;
+  text-shadow: 0 1px 12px rgba(0,0,0,0.3);
+}
