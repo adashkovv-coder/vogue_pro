@@ -1,7 +1,6 @@
 /* ============================================================
-   ШАБЛОН 07 — BESTIES
-   Figma Frame 2714
-   Нижние 2 строки — с эффектом "рукописного" контура (SVG filter)
+   ШАБЛОН 07 — BESTIES (v4)
+   Более крупные буквы, тонкий скрибл-эффект, отступы у фото
    ============================================================ */
 export default {
   id: 'besties',
@@ -23,17 +22,16 @@ export default {
     const e = k => c[k] ? '' : 'empty';
     const w = c.word || 'BESTIES';
 
-    // SVG-фильтр для эффекта "дрожащей руки"
     const svgFilter = `
       <svg width="0" height="0" style="position:absolute">
         <defs>
-          <filter id="scribble" x="-5%" y="-5%" width="110%" height="110%">
-            <feTurbulence type="turbulence" baseFrequency="0.028" numOctaves="2" seed="3" result="turb"/>
-            <feDisplacementMap in="SourceGraphic" in2="turb" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+          <filter id="scribbleA" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="1" seed="2" result="t1"/>
+            <feDisplacementMap in="SourceGraphic" in2="t1" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
           </filter>
-          <filter id="scribble2" x="-5%" y="-5%" width="110%" height="110%">
-            <feTurbulence type="turbulence" baseFrequency="0.035" numOctaves="2" seed="7" result="turb"/>
-            <feDisplacementMap in="SourceGraphic" in2="turb" scale="3.8" xChannelSelector="R" yChannelSelector="G"/>
+          <filter id="scribbleB" x="-10%" y="-10%" width="120%" height="120%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="1" seed="5" result="t2"/>
+            <feDisplacementMap in="SourceGraphic" in2="t2" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
           </filter>
         </defs>
       </svg>`;
