@@ -18,11 +18,15 @@ import t17 from './17-malenkaya.js';
 import t18 from './18-collage-rounded.js';
 import t19 from './19-pinterest-board.js';
 import t20 from './20-friendship-years.js';
+import t21 from './21-16-things-left.js';
+import t22 from './22-16-things-right.js';
+import t23 from './23-love-letters.js';
+import t24 from './24-mama.js';
 
 export const TEMPLATES = [
   t01, t02, t03, t04, t05, t06, t07, t08,
   t09, t10, t11, t12, t13, t14, t15, t16,
-  t17, t18, t19, t20
+  t17, t18, t19, t20, t21, t22, t23, t24
 ];
 
 export const getTemplate = id => TEMPLATES.find(t => t.id === id);
