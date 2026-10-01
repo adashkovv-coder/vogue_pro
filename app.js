@@ -584,10 +584,14 @@ async function pageToBlob(page, pageNum){
   holder.appendChild(node);
 
   // Ждём перерисовки
-  await new Promise(r => setTimeout(r, 120));
+  await new Promise(r => setTimeout(r, 150));
+
+  // ⚡ Высокое разрешение: 2481×3507 (как в Figma)
+  // Базовый размер страницы — 794×1123, значит scale ≈ 3.125
+  const SCALE = 2481 / 794;  // ≈ 3.125
 
   const canvas = await html2canvas(node, {
-    scale: 2,
+    scale: SCALE,
     backgroundColor: '#ffffff',
     logging: false,
     useCORS: true,
@@ -597,8 +601,24 @@ async function pageToBlob(page, pageNum){
     windowHeight: 1123
   });
 
+  // На всякий случай — принудительно ресайзим до точных 2481×3507
+  const targetW = 2481;
+  const targetH = 3507;
+
+  let finalCanvas = canvas;
+  if (canvas.width !== targetW || canvas.height !== targetH){
+    const fixed = document.createElement('canvas');
+    fixed.width = targetW;
+    fixed.height = targetH;
+    const ctx = fixed.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(canvas, 0, 0, targetW, targetH);
+    finalCanvas = fixed;
+  }
+
   return new Promise((resolve) => {
-    canvas.toBlob((blob) => resolve(blob), 'image/png', 1.0);
+    finalCanvas.toBlob((blob) => resolve(blob), 'image/png', 1.0);
   });
 }
 
