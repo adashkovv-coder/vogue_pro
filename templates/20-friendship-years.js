@@ -3,15 +3,14 @@ export default {
   name: 'Дружба сквозь года',
   category: 'Коллажи',
   fields: [
-    {key:'title1',label:'Заголовок строка 1',type:'text'},
-    {key:'title2',label:'Заголовок строка 2',type:'text'},
+    {key:'title1',label:'Заголовок 1',type:'text'},
+    {key:'title2',label:'Заголовок 2',type:'text'},
     {key:'year1',label:'Год 1',type:'text'},{key:'year2',label:'Год 2',type:'text'},
     {key:'year3',label:'Год 3',type:'text'},{key:'year4',label:'Год 4',type:'text'},
     {key:'year5',label:'Год 5',type:'text'},{key:'year6',label:'Год 6',type:'text'},
     {key:'year7',label:'Год 7',type:'text'},
-    {key:'photo1',label:'Фото 1',type:'image'},{key:'photo2',label:'Фото 2',type:'image'},
-    {key:'photo3',label:'Фото 3',type:'image'},{key:'photo4',label:'Фото 4',type:'image'},
-    {key:'photo5',label:'Фото 5',type:'image'},{key:'photo6',label:'Фото 6',type:'image'}
+    {key:'photos',label:'Загрузить 6 фото',type:'photos',
+      slots:['photo1','photo2','photo3','photo4','photo5','photo6']}
   ],
   defaults: {
     title1:'Наша дружба',title2:'сквозь года',

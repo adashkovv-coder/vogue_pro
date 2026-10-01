@@ -3,10 +3,8 @@ export default {
   name: 'Фото-сетка',
   category: 'Коллажи',
   fields: [
-    {key:'photo1',label:'Фото 1',type:'image'},{key:'photo2',label:'Фото 2',type:'image'},
-    {key:'photo3',label:'Фото 3',type:'image'},{key:'photo4',label:'Фото 4',type:'image'},
-    {key:'photo5',label:'Фото 5',type:'image'},{key:'photo6',label:'Фото 6',type:'image'},
-    {key:'photo7',label:'Фото 7',type:'image'},{key:'photo8',label:'Фото 8',type:'image'}
+    {key:'photos',label:'Загрузить 8 фото',type:'photos',
+      slots:['photo1','photo2','photo3','photo4','photo5','photo6','photo7','photo8']}
   ],
   defaults: {photo1:null,photo2:null,photo3:null,photo4:null,photo5:null,photo6:null,photo7:null,photo8:null},
   render(c, no){

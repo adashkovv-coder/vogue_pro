@@ -1,24 +1,12 @@
-/* ============================================================
-   ШАБЛОН 06 — OUR MEMORIES (левая страница)
-   Figma Frame 2000: 2481×3507 → A4 794×1123
-   Слово "MEMORIES" продолжается на правой странице
-   ============================================================ */
 export default {
   id: 'our-memories-left',
   name: 'Our Memories (левая)',
   category: 'Коллажи',
   fields: [
     {key:'word1',label:'Слово курсивом (OUR)',type:'text'},
-    {key:'word2',label:'Слово основное (MEMO...)',type:'text'},
-    {key:'photo1',label:'Фото 1 (большое)',type:'image'},
-    {key:'photo2',label:'Фото 2',type:'image'},
-    {key:'photo3',label:'Фото 3',type:'image'},
-    {key:'photo4',label:'Фото 4',type:'image'},
-    {key:'photo5',label:'Фото 5',type:'image'},
-    {key:'photo6',label:'Фото 6',type:'image'},
-    {key:'photo7',label:'Фото 7',type:'image'},
-    {key:'photo8',label:'Фото 8',type:'image'},
-    {key:'photo9',label:'Фото 9',type:'image'}
+    {key:'word2',label:'Слово основное (MEMO…)',type:'text'},
+    {key:'photos',label:'Загрузить 9 фото',type:'photos',
+      slots:['photo1','photo2','photo3','photo4','photo5','photo6','photo7','photo8','photo9']}
   ],
   defaults: {
     word1:'OUR', word2:'MEMORIES',

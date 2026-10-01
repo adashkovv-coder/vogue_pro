@@ -3,11 +3,8 @@ export default {
   name: 'Коллаж (скруглённый)',
   category: 'Коллажи',
   fields: [
-    {key:'photo1',label:'Фото 1',type:'image'},{key:'photo2',label:'Фото 2',type:'image'},
-    {key:'photo3',label:'Фото 3',type:'image'},{key:'photo4',label:'Фото 4',type:'image'},
-    {key:'photo5',label:'Фото 5',type:'image'},{key:'photo6',label:'Фото 6',type:'image'},
-    {key:'photo7',label:'Фото 7',type:'image'},{key:'photo8',label:'Фото 8',type:'image'},
-    {key:'photo9',label:'Фото 9',type:'image'},{key:'photo10',label:'Фото 10',type:'image'}
+    {key:'photos',label:'Загрузить 10 фото',type:'photos',
+      slots:['photo1','photo2','photo3','photo4','photo5','photo6','photo7','photo8','photo9','photo10']}
   ],
   defaults: {photo1:null,photo2:null,photo3:null,photo4:null,photo5:null,photo6:null,photo7:null,photo8:null,photo9:null,photo10:null},
   render(c, no){
@@ -15,16 +12,7 @@ export default {
     const e = k => c[k] ? '' : 'empty';
     return `<div class="page cr-page">
       <div class="cr-grid">
-        <div class="cri c1 ${e('photo1')}" style="${p('photo1')}"></div>
-        <div class="cri c2 ${e('photo2')}" style="${p('photo2')}"></div>
-        <div class="cri c3 ${e('photo3')}" style="${p('photo3')}"></div>
-        <div class="cri c4 ${e('photo4')}" style="${p('photo4')}"></div>
-        <div class="cri c5 ${e('photo5')}" style="${p('photo5')}"></div>
-        <div class="cri c6 ${e('photo6')}" style="${p('photo6')}"></div>
-        <div class="cri c7 ${e('photo7')}" style="${p('photo7')}"></div>
-        <div class="cri c8 ${e('photo8')}" style="${p('photo8')}"></div>
-        <div class="cri c9 ${e('photo9')}" style="${p('photo9')}"></div>
-        <div class="cri c10 ${e('photo10')}" style="${p('photo10')}"></div>
+        ${[1,2,3,4,5,6,7,8,9,10].map(i => `<div class="cri c${i} ${e('photo'+i)}" style="${p('photo'+i)}"></div>`).join('')}
       </div>
     </div>`;
   }

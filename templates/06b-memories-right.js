@@ -1,21 +1,11 @@
-/* ============================================================
-   ШАБЛОН 06B — MEMORIES (правая страница)
-   Figma Frame 2002: 2481×3507 → A4 794×1123
-   Продолжение слова "MEMORIES" с левой страницы
-   ============================================================ */
 export default {
   id: 'memories-right',
   name: 'Memories (правая)',
   category: 'Коллажи',
   fields: [
-    {key:'word',label:'Слово основное (RIES)',type:'text'},
-    {key:'photo1',label:'Фото 1',type:'image'},
-    {key:'photo2',label:'Фото 2',type:'image'},
-    {key:'photo3',label:'Фото 3',type:'image'},
-    {key:'photo4',label:'Фото 4',type:'image'},
-    {key:'photo5',label:'Фото 5',type:'image'},
-    {key:'photo6',label:'Фото 6',type:'image'},
-    {key:'photo7',label:'Фото 7',type:'image'}
+    {key:'word',label:'Слово (RIES)',type:'text'},
+    {key:'photos',label:'Загрузить 7 фото',type:'photos',
+      slots:['photo1','photo2','photo3','photo4','photo5','photo6','photo7']}
   ],
   defaults: {
     word:'RIES',

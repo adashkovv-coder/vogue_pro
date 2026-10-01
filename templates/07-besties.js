@@ -1,21 +1,12 @@
-/* ============================================================
-   ШАБЛОН 07 — BESTIES
-   Figma Frame 2714: 2481×3507 → A4 794×1123
-   Шрифт: Rubik (Black / 900) — как "Rubik One"
-   Обводка: -webkit-text-stroke
-   ============================================================ */
 export default {
   id: 'besties',
   name: 'Besties',
   category: 'Коллажи',
   fields: [
-    { key:'word',   label:'Заголовок',        type:'text' },
-    { key:'quote',  label:'Цитата снизу',     type:'textarea' },
-    { key:'photo1', label:'Фото 1 (верх, широкое)', type:'image' },
-    { key:'photo2', label:'Фото 2 (верх, право)', type:'image' },
-    { key:'photo3', label:'Фото 3 (низ, лево)',   type:'image' },
-    { key:'photo4', label:'Фото 4 (низ, центр)',  type:'image' },
-    { key:'photo5', label:'Фото 5 (низ, право)',  type:'image' }
+    { key:'word',  label:'Заголовок', type:'text' },
+    { key:'quote', label:'Цитата снизу', type:'textarea' },
+    { key:'photos',label:'Загрузить 5 фото', type:'photos',
+      slots:['photo1','photo2','photo3','photo4','photo5'] }
   ],
   defaults: {
     word: 'BESTIES',
@@ -25,12 +16,11 @@ export default {
   render(c, no){
     const p = k => c[k] ? `background-image:url('${c[k]}')` : '';
     const e = k => c[k] ? '' : 'empty';
-    const word = c.word || 'BESTIES';
+    const w = c.word || 'BESTIES';
     return `<div class="page best-page">
-      <div class="best-title best-title--solid">${word}</div>
-      <div class="best-title best-title--outline o1">${word}</div>
-      <div class="best-title best-title--outline o2">${word}</div>
-
+      <div class="best-title best-title--solid">${w}</div>
+      <div class="best-title best-title--outline o1">${w}</div>
+      <div class="best-title best-title--outline o2">${w}</div>
       <div class="best-grid">
         <div class="bg-item bg-a ${e('photo1')}" style="${p('photo1')}"></div>
         <div class="bg-item bg-b ${e('photo2')}" style="${p('photo2')}"></div>
@@ -38,7 +28,6 @@ export default {
         <div class="bg-item bg-d ${e('photo4')}" style="${p('photo4')}"></div>
         <div class="bg-item bg-e ${e('photo5')}" style="${p('photo5')}"></div>
       </div>
-
       <div class="best-quote">${c.quote || ''}</div>
     </div>`;
   }
