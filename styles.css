@@ -557,3 +557,122 @@ button{font-family:inherit; cursor:pointer; border:none; background:none;}
   line-height: 1.45;
   text-shadow: 0 1px 12px rgba(0,0,0,0.3);
 }
+
+/* ============================================================
+   ШАБЛОН 05 — TO FRIEND
+   ============================================================ */
+.to-friend {
+  background: #ffffff;
+  color: #111;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Верхний курсивный текст */
+.tf-top {
+  position: absolute;
+  top: 145px;
+  left: 86px;
+  width: 622px;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.5;
+  text-align: center;
+  color: #111;
+}
+
+/* Фото (нижний левый угол) */
+.tf-photo {
+  position: absolute;
+  left: 45px;
+  bottom: 45px;
+  width: 352px;
+  height: 460px;
+  background-size: cover;
+  background-position: center;
+  background-color: #eee;
+}
+.tf-photo.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+}
+.tf-photo.empty span {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #aaa;
+}
+
+/* Типографический блок справа */
+.tf-typography {
+  position: absolute;
+  right: 45px;
+  bottom: 45px;
+  width: 340px;
+  text-align: right;
+  color: #8B1A1A;
+}
+
+.tf-word {
+  font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: .95;
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+  color: #8B1A1A;
+}
+.tf-word--mt {
+  margin-top: 8px;
+}
+
+/* Скрипт-вставки */
+.tf-script {
+  font-family: 'Caveat', cursive;
+  font-weight: 600;
+  color: #111;
+  line-height: 1;
+}
+
+.tf-script-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 12px;
+  margin: 6px 0;
+  flex-wrap: wrap;
+}
+
+.tf-script--small {
+  font-size: 32px;
+}
+
+.tf-script--big {
+  font-size: 48px;
+  font-style: italic;
+}
+
+.tf-script--tiny {
+  font-size: 26px;
+  font-style: italic;
+  margin-bottom: 8px;
+  text-align: right;
+  display: block;
+}
+
+/* Адаптив под маленькие размеры */
+@media (max-width: 900px) {
+  .tf-top { font-size: 18px; width: 90%; left: 5%; top: 100px; }
+  .tf-photo { width: 40%; height: 40%; }
+  .tf-typography { width: 50%; }
+  .tf-word { font-size: 48px; }
+  .tf-script--big { font-size: 36px; }
+  .tf-script--small { font-size: 24px; }
+  .tf-script--tiny { font-size: 20px; }
+}
