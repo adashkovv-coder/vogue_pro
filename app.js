@@ -567,3 +567,112 @@ async function downloadPDF(){
     setTimeout(() => { btn.disabled = false; btn.textContent = 'Скачать PDF'; }, 1500);
   }
 }
+
+
+/* ============================================================
+   ЭКСПОРТ PNG
+   ============================================================ */
+
+/* ── Утилита: рендер страницы → canvas → blob ── */
+async function pageToBlob(page, pageNum){
+  const holder = document.getElementById('render-holder');
+  holder.innerHTML = '';
+
+  const d = document.createElement('div');
+  d.innerHTML = renderPage(page, pageNum).trim();
+  const node = d.firstElementChild;
+  holder.appendChild(node);
+
+  // Ждём перерисовки
+  await new Promise(r => setTimeout(r, 120));
+
+  const canvas = await html2canvas(node, {
+    scale: 2,
+    backgroundColor: '#ffffff',
+    logging: false,
+    useCORS: true,
+    width: 794,
+    height: 1123,
+    windowWidth: 794,
+    windowHeight: 1123
+  });
+
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => resolve(blob), 'image/png', 1.0);
+  });
+}
+
+function downloadBlob(blob, filename){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* ── Скачать ТЕКУЩУЮ страницу в PNG ── */
+document.getElementById('btn-png-current').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-png-current');
+  const origText = btn.textContent;
+
+  btn.disabled = true;
+  btn.textContent = 'Готовим…';
+
+  try {
+    const p = state.pages[state.activeIndex];
+    const no = state.activeIndex + 1;
+    const blob = await pageToBlob(p, no);
+    const safeName = (getTemplate(p.templateId)?.name || 'page').replace(/[^\wа-яА-ЯёЁ\-]/g, '_');
+    downloadBlob(blob, `VOGUE_page_${String(no).padStart(2,'0')}_${safeName}.png`);
+    btn.textContent = 'Готово ✓';
+  } catch(err){
+    console.error(err);
+    btn.textContent = 'Ошибка';
+  } finally {
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = origText;
+    }, 1500);
+  }
+});
+
+/* ── Скачать ВСЕ страницы одним ZIP ── */
+document.getElementById('btn-png-all').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-png-all');
+  const origText = btn.textContent;
+  btn.disabled = true;
+
+  try {
+    const zip = new JSZip();
+    const folder = zip.folder('VOGUE_journal');
+
+    for (let i = 0; i < state.pages.length; i++){
+      btn.textContent = `PNG ${i+1}/${state.pages.length}`;
+      const p = state.pages[i];
+      const no = i + 1;
+      const blob = await pageToBlob(p, no);
+
+      const tpl = getTemplate(p.templateId);
+      const safeName = (tpl?.name || 'page').replace(/[^\wа-яА-ЯёЁ\-]/g, '_');
+      const filename = `${String(no).padStart(2,'0')}_${safeName}.png`;
+      folder.file(filename, blob);
+    }
+
+    btn.textContent = 'Собираю ZIP…';
+    const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
+    downloadBlob(zipBlob, 'VOGUE_journal_PNG.zip');
+    btn.textContent = 'Готово ✓';
+  } catch(err){
+    console.error(err);
+    btn.textContent = 'Ошибка';
+  } finally {
+    document.getElementById('render-holder').innerHTML = '';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = origText;
+    }, 1500);
+  }
+});

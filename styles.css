@@ -2034,3 +2034,22 @@ button{font-family:inherit; cursor:pointer; border:none; background:none;}
     padding: 12px 10px 30px;
   }
 }
+
+/* ═══════════════════ PNG КНОПКИ — адаптив ═══════════════════ */
+@media (max-width: 768px){
+  .topbar-actions{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+  .topbar-actions .btn{
+    padding: 10px 14px;
+    font-size: 10px;
+    letter-spacing: .14em;
+  }
+  #btn-editor-back{ grid-column: 1 / 3; }
+  #btn-png-current{ grid-column: 1 / 2; }
+  #btn-png-all{ grid-column: 2 / 3; }
+  #btn-pdf{ grid-column: 1 / 3; }
+}
