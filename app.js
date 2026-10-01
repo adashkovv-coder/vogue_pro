@@ -341,14 +341,36 @@ function renderGallery(){
     </div>`;
   }).join('');
 
+  // Подгоняем масштаб каждого превью под ширину его контейнера
   requestAnimationFrame(() => {
-    $$('.gallery-item .thumb-wrap').forEach(el => {
-      const s = el.clientWidth / 794;
-      const sc = el.querySelector('.thumb-scaler');
-      if (sc) sc.style.transform = `scale(${s})`;
+    requestAnimationFrame(() => {
+      $$('.gallery-item .thumb-wrap').forEach(el => {
+        const w = el.clientWidth;
+        if (!w) return;
+        const s = w / 794;
+        const sc = el.querySelector('.thumb-scaler');
+        if (sc) sc.style.transform = `scale(${s})`;
+      });
     });
   });
 }
+
+/* Пересчёт превью при изменении размера окна */
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (!$('#gallery-modal').classList.contains('hidden')){
+      $$('.gallery-item .thumb-wrap').forEach(el => {
+        const w = el.clientWidth;
+        if (!w) return;
+        const s = w / 794;
+        const sc = el.querySelector('.thumb-scaler');
+        if (sc) sc.style.transform = `scale(${s})`;
+      });
+    }
+  }, 180);
+});
 
 function applyTemplate(tplId){
   const p = state.pages[state.activeIndex];
