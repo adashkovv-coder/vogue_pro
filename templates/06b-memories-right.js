@@ -1,33 +1,33 @@
 /* ============================================================
    ШАБЛОН 06B — MEMORIES (правая страница)
    Figma Frame 2002: 2481×3507 → A4 794×1123
+   Продолжение слова "MEMORIES" с левой страницы
    ============================================================ */
 export default {
   id: 'memories-right',
   name: 'Memories (правая)',
   category: 'Коллажи',
   fields: [
-    {key:'word',label:'Заголовок',type:'text'},
-    {key:'photo1',label:'Фото 1 (большое)',type:'image'},
+    {key:'word',label:'Слово основное (RIES)',type:'text'},
+    {key:'photo1',label:'Фото 1',type:'image'},
     {key:'photo2',label:'Фото 2',type:'image'},
     {key:'photo3',label:'Фото 3',type:'image'},
     {key:'photo4',label:'Фото 4',type:'image'},
     {key:'photo5',label:'Фото 5',type:'image'},
     {key:'photo6',label:'Фото 6',type:'image'},
-    {key:'photo7',label:'Фото 7',type:'image'},
-    {key:'photo8',label:'Фото 8',type:'image'}
+    {key:'photo7',label:'Фото 7',type:'image'}
   ],
   defaults: {
-    word:'MEMORIES',
+    word:'RIES',
     photo1:null,photo2:null,photo3:null,photo4:null,
-    photo5:null,photo6:null,photo7:null,photo8:null
+    photo5:null,photo6:null,photo7:null
   },
   render(c, no){
     const p = k => c[k] ? `background-image:url('${c[k]}')` : '';
     const e = k => c[k] ? '' : 'empty';
     return `<div class="page mem-page mem-page--right">
       <div class="mem-title mem-title--right">
-        <span class="mem-memories">${c.word||''}</span>
+        <span class="mem-memories mem-memories--right">${c.word||''}</span>
       </div>
       <div class="mem-grid mem-grid--right">
         <div class="mem-cell mem-r1 ${e('photo1')}" style="${p('photo1')}"></div>
@@ -37,7 +37,6 @@ export default {
         <div class="mem-cell mem-r5 ${e('photo5')}" style="${p('photo5')}"></div>
         <div class="mem-cell mem-r6 ${e('photo6')}" style="${p('photo6')}"></div>
         <div class="mem-cell mem-r7 ${e('photo7')}" style="${p('photo7')}"></div>
-        <div class="mem-cell mem-r8 ${e('photo8')}" style="${p('photo8')}"></div>
       </div>
     </div>`;
   }
