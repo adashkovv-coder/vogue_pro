@@ -1,3 +1,8 @@
+#!/bin/bash
+echo "▬▬▬ Исправляю баги + добавляю 2 шаблона + мобильная версия ▬▬▬"
+
+# ============ ФИКС APP.JS — убираем перерисовку формы при вводе ============
+cat > app.js << 'EOF'
 /* ============================================================
    ЛОГИКА ПРИЛОЖЕНИЯ
    ============================================================ */
@@ -423,3 +428,332 @@ async function downloadPDF(){
     }, 1500);
   }
 }
+EOF
+
+echo "✅ app.js исправлен — форма больше не теряет фокус"
+
+# ============ ДОБАВЛЯЕМ 2 НОВЫХ ШАБЛОНА ============
+
+# --- ШАБЛОН 19 — PINTEREST BOARD ---
+cat > templates/19-pinterest-board.js << 'EOF'
+export default {
+  id: 'pinterest-board',
+  name: 'Pinterest доска',
+  category: 'Коллажи',
+  fields: [
+    {key:'title1',label:'Заголовок строка 1 (жирный)',type:'text'},
+    {key:'title2',label:'Заголовок строка 2',type:'text'},
+    {key:'photo1',label:'Фото 1',type:'image'},{key:'photo2',label:'Фото 2',type:'image'},
+    {key:'photo3',label:'Фото 3',type:'image'},{key:'photo4',label:'Фото 4',type:'image'},
+    {key:'photo5',label:'Фото 5',type:'image'},{key:'photo6',label:'Фото 6',type:'image'},
+    {key:'photo7',label:'Фото 7',type:'image'},{key:'photo8',label:'Фото 8',type:'image'},
+    {key:'photo9',label:'Фото 9',type:'image'},{key:'photo10',label:'Фото 10',type:'image'},
+    {key:'photo11',label:'Фото 11',type:'image'}
+  ],
+  defaults: {
+    title1:'Она, если была бы доской',title2:'на Pinterest',
+    photo1:null,photo2:null,photo3:null,photo4:null,photo5:null,photo6:null,
+    photo7:null,photo8:null,photo9:null,photo10:null,photo11:null
+  },
+  render(c, no){
+    const p = k => c[k] ? `background-image:url('${c[k]}')` : '';
+    const e = k => c[k] ? '' : 'empty';
+    return `<div class="page pinterest-page">
+      <div class="pin-title">
+        <div class="pin-title-bold">${c.title1||''}</div>
+        <div class="pin-title-line">${c.title2||''}</div>
+      </div>
+      <div class="pin-grid">
+        <div class="pin-item pin-1 ${e('photo1')}" style="${p('photo1')}"></div>
+        <div class="pin-item pin-2 ${e('photo2')}" style="${p('photo2')}"></div>
+        <div class="pin-item pin-3 ${e('photo3')}" style="${p('photo3')}"></div>
+        <div class="pin-item pin-4 ${e('photo4')}" style="${p('photo4')}"></div>
+        <div class="pin-item pin-5 ${e('photo5')}" style="${p('photo5')}"></div>
+        <div class="pin-item pin-6 ${e('photo6')}" style="${p('photo6')}"></div>
+        <div class="pin-item pin-7 ${e('photo7')}" style="${p('photo7')}"></div>
+        <div class="pin-item pin-8 ${e('photo8')}" style="${p('photo8')}"></div>
+        <div class="pin-item pin-9 ${e('photo9')}" style="${p('photo9')}"></div>
+        <div class="pin-item pin-10 ${e('photo10')}" style="${p('photo10')}"></div>
+        <div class="pin-item pin-11 ${e('photo11')}" style="${p('photo11')}"></div>
+      </div>
+    </div>`;
+  }
+};
+EOF
+
+# --- ШАБЛОН 20 — НАША ДРУЖБА СКВОЗЬ ГОДА ---
+cat > templates/20-friendship-years.js << 'EOF'
+export default {
+  id: 'friendship-years',
+  name: 'Дружба сквозь года',
+  category: 'Коллажи',
+  fields: [
+    {key:'title1',label:'Заголовок строка 1',type:'text'},
+    {key:'title2',label:'Заголовок строка 2',type:'text'},
+    {key:'year1',label:'Год 1',type:'text'},{key:'year2',label:'Год 2',type:'text'},
+    {key:'year3',label:'Год 3',type:'text'},{key:'year4',label:'Год 4',type:'text'},
+    {key:'year5',label:'Год 5',type:'text'},{key:'year6',label:'Год 6',type:'text'},
+    {key:'year7',label:'Год 7',type:'text'},
+    {key:'photo1',label:'Фото 1',type:'image'},{key:'photo2',label:'Фото 2',type:'image'},
+    {key:'photo3',label:'Фото 3',type:'image'},{key:'photo4',label:'Фото 4',type:'image'},
+    {key:'photo5',label:'Фото 5',type:'image'},{key:'photo6',label:'Фото 6',type:'image'}
+  ],
+  defaults: {
+    title1:'Наша дружба',title2:'сквозь года',
+    year1:'2020',year2:'2021',year3:'2022',year4:'2023',year5:'2024',year6:'2025',year7:'2026',
+    photo1:null,photo2:null,photo3:null,photo4:null,photo5:null,photo6:null
+  },
+  render(c, no){
+    const p = k => c[k] ? `background-image:url('${c[k]}')` : '';
+    const e = k => c[k] ? '' : 'empty';
+    return `<div class="page friendship-page">
+      <div class="fr-title">${c.title1||''}</div>
+      <div class="fr-subtitle">${c.title2||''}</div>
+      <div class="fr-item fr-i1 ${e('photo1')}" style="${p('photo1')}"></div>
+      <div class="fr-year fr-y1">${c.year1||''}</div>
+      <div class="fr-item fr-i2 ${e('photo2')}" style="${p('photo2')}"></div>
+      <div class="fr-year fr-y2">${c.year2||''}</div>
+      <div class="fr-item fr-i3 ${e('photo3')}" style="${p('photo3')}"></div>
+      <div class="fr-year fr-y3">${c.year3||''}</div>
+      <div class="fr-item fr-i4 ${e('photo4')}" style="${p('photo4')}"></div>
+      <div class="fr-year fr-y4">${c.year4||''}</div>
+      <div class="fr-item fr-i5 ${e('photo5')}" style="${p('photo5')}"></div>
+      <div class="fr-year fr-y5">${c.year5||''}</div>
+      <div class="fr-item fr-i6 ${e('photo6')}" style="${p('photo6')}"></div>
+      <div class="fr-year fr-y6">${c.year6||''}</div>
+      <div class="fr-year fr-y7">${c.year7||''}</div>
+    </div>`;
+  }
+};
+EOF
+
+echo "✅ Созданы 19-pinterest-board.js и 20-friendship-years.js"
+
+# ============ ОБНОВЛЯЕМ REGISTRY ============
+cat > templates/registry.js << 'EOF'
+import t01 from './01-birthday-vogue.js';
+import t02 from './02-whos-that-girl.js';
+import t03 from './04-to-friend.js';
+import t04 from './05-love-quote.js';
+import t05 from './06-our-memories-left.js';
+import t06 from './06b-memories-right.js';
+import t07 from './07-besties.js';
+import t08 from './08-photo-grid.js';
+import t09 from './09-favourite.js';
+import t10 from './10-her-songs.js';
+import t11 from './11-annas-playlist.js';
+import t12 from './12-birthday-cover.js';
+import t13 from './13-her-vibe.js';
+import t14 from './14-tvoya-lyubov.js';
+import t15 from './15-zodiac-map.js';
+import t16 from './16-detstvo.js';
+import t17 from './17-malenkaya.js';
+import t18 from './18-collage-rounded.js';
+import t19 from './19-pinterest-board.js';
+import t20 from './20-friendship-years.js';
+
+export const TEMPLATES = [
+  t01, t02, t03, t04, t05, t06, t07, t08,
+  t09, t10, t11, t12, t13, t14, t15, t16,
+  t17, t18, t19, t20
+];
+
+export const getTemplate = id => TEMPLATES.find(t => t.id === id);
+export const getCategories = () => ['Все', ...new Set(TEMPLATES.map(t => t.category))];
+EOF
+
+echo "✅ registry.js обновлён (20 шаблонов)"
+
+# ============ ДОБАВЛЯЕМ CSS ============
+cat >> styles.css << 'EOF'
+
+/* ═══════════════════ ШАБЛОН 19 — PINTEREST BOARD ═══════════════════ */
+.pinterest-page{
+  background: #fff;
+  padding: 40px 36px;
+  font-family: 'Times New Roman', Georgia, serif;
+  color: #000;
+}
+.pin-title{
+  text-align: center;
+  margin-bottom: 30px;
+}
+.pin-title-bold{
+  font-size: 62px;
+  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 4px;
+}
+.pin-title-line{
+  font-size: 62px;
+  font-weight: 400;
+  line-height: 1.05;
+}
+.pin-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 175px;
+  gap: 14px;
+}
+.pin-item{
+  background-size: cover;
+  background-position: center;
+  background-color: #f0ede8;
+  border-radius: 24px;
+}
+.pin-item.empty{ background: #f0ede8; }
+.pin-1{ grid-column: 1; grid-row: 1; }
+.pin-2{ grid-column: 2; grid-row: 1 / 3; }
+.pin-3{ grid-column: 3 / 5; grid-row: 1; }
+.pin-4{ grid-column: 1; grid-row: 2 / 4; }
+.pin-5{ grid-column: 3; grid-row: 2 / 4; }
+.pin-6{ grid-column: 4; grid-row: 2 / 4; }
+.pin-7{ grid-column: 1; grid-row: 4 / 6; }
+.pin-8{ grid-column: 2; grid-row: 3 / 5; }
+.pin-9{ grid-column: 3; grid-row: 4 / 5; }
+.pin-10{ grid-column: 3 / 5; grid-row: 5 / 7; }
+.pin-11{ grid-column: 1; grid-row: 6 / 8; }
+
+/* ═══════════════════ ШАБЛОН 20 — ДРУЖБА СКВОЗЬ ГОДА ═══════════════════ */
+.friendship-page{
+  background: #000;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Times New Roman', Georgia, serif;
+}
+.fr-title{
+  position: absolute;
+  top: 20px; left: 50px;
+  font-size: 110px;
+  font-style: italic;
+  line-height: 1;
+  z-index: 5;
+}
+.fr-subtitle{
+  position: absolute;
+  top: 150px; right: 80px;
+  font-size: 82px;
+  font-style: italic;
+  font-weight: 700;
+  z-index: 5;
+}
+.fr-item{
+  position: absolute;
+  background-size: cover;
+  background-position: center;
+  background-color: #222;
+}
+.fr-item.empty{ background: #222; }
+.fr-i1{ left: 45px; top: 340px; width: 200px; height: 260px; }
+.fr-i2{ left: 45px; top: 660px; width: 200px; height: 260px; }
+.fr-i3{ left: 320px; top: 500px; width: 240px; height: 300px; }
+.fr-i4{ right: 45px; top: 340px; width: 200px; height: 260px; }
+.fr-i5{ right: 45px; top: 660px; width: 200px; height: 260px; }
+.fr-i6{ left: 50%; transform: translateX(-50%); bottom: 60px; width: 240px; height: 180px; }
+.fr-year{
+  position: absolute;
+  font-family: 'Great Vibes', cursive;
+  font-size: 58px;
+  color: #fff;
+  z-index: 5;
+}
+.fr-y1{ left: 60px; top: 620px; }
+.fr-y2{ left: 60px; top: 940px; }
+.fr-y3{ left: 360px; top: 820px; }
+.fr-y4{ right: 60px; top: 620px; }
+.fr-y5{ right: 60px; top: 940px; }
+.fr-y6{ left: 50%; transform: translateX(-50%); bottom: 30px; }
+.fr-y7{ left: 50%; transform: translateX(-50%); bottom: 200px; color: #fff; font-size: 66px; }
+EOF
+
+echo "✅ CSS добавлен"
+
+# ============ МОБИЛЬНАЯ ВЕРСИЯ — улучшения ============
+cat >> styles.css << 'EOF'
+
+/* ═══════════════════ МОБИЛЬНАЯ ВЕРСИЯ ═══════════════════ */
+@media (max-width: 768px){
+  .editor{
+    grid-template-columns: 1fr;
+    padding: 10px;
+    gap: 14px;
+  }
+  .sidebar{
+    position: static;
+    max-height: none;
+    padding: 10px;
+  }
+  .page-list{
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 6px;
+  }
+  .page-item{
+    flex-direction: column;
+    padding: 6px;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+  .page-num{ font-size: 12px; }
+  .page-thumb-mini{ width: 70px; height: 100px; }
+  .page-name{ font-size: 9px; max-width: 70px; }
+
+  .stage{ padding: 14px; }
+  .stage-preview{ max-width: 100%; }
+  .stage-actions{ flex-direction: column; width: 100%; }
+  .stage-actions .btn{ width: 100%; }
+
+  .form-panel{
+    position: static;
+    max-height: none;
+    padding: 14px;
+  }
+  .form-fields{ overflow: visible; }
+
+  .topbar{
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    gap: 10px;
+  }
+  .topbar-brand{ font-size: 16px; }
+  .topbar-info{ font-size: 10px; }
+  .topbar-actions{ margin-left: 0; width: 100%; justify-content: space-between; }
+  .topbar .btn{ padding: 9px 16px; font-size: 10px; }
+
+  .modal__inner{ max-height: 95vh; }
+  .modal__head{ padding: 14px 18px; }
+  .modal__title{ font-size: 18px; }
+  .gallery-grid{
+    grid-template-columns: repeat(2, 1fr);
+    padding: 14px;
+    gap: 12px;
+  }
+  .category-filter{ padding: 10px 14px; gap: 6px; }
+  .cat-chip{ padding: 6px 12px; font-size: 10px; }
+
+  .center-wrap h1{ font-size: 34px; }
+  .page-opt{ width: 84px; padding: 14px 6px; }
+  .page-opt b{ font-size: 22px; }
+}
+EOF
+
+echo "✅ Мобильные стили добавлены"
+
+# ============ ПУШ В GIT ============
+echo ""
+echo "→ git add / commit / push..."
+git add .
+git commit -m "Fix input bug + add Pinterest & Friendship templates + mobile UX" || echo "⚠ Нечего коммитить"
+git push origin main || echo "⚠ Не удалось запушить"
+
+echo ""
+echo "▬▬▬ ГОТОВО ▬▬▬"
+echo ""
+echo "Что сделано:"
+echo "  ✅ Форма больше не закрывается при вводе"
+echo "  ✅ Добавлены шаблоны: Pinterest доска, Дружба сквозь года"
+echo "  ✅ Улучшена мобильная версия"
+echo ""
+echo "Открой сайт и нажми Ctrl+Shift+R"

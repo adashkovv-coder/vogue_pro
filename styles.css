@@ -1108,3 +1108,168 @@ button{font-family:inherit; cursor:pointer; border:none; background:none;}
   padding: 0 30px;
   color: #000;
 }
+
+/* ═══════════════════ ШАБЛОН 19 — PINTEREST BOARD ═══════════════════ */
+.pinterest-page{
+  background: #fff;
+  padding: 40px 36px;
+  font-family: 'Times New Roman', Georgia, serif;
+  color: #000;
+}
+.pin-title{
+  text-align: center;
+  margin-bottom: 30px;
+}
+.pin-title-bold{
+  font-size: 62px;
+  font-weight: 700;
+  line-height: 1.05;
+  margin-bottom: 4px;
+}
+.pin-title-line{
+  font-size: 62px;
+  font-weight: 400;
+  line-height: 1.05;
+}
+.pin-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 175px;
+  gap: 14px;
+}
+.pin-item{
+  background-size: cover;
+  background-position: center;
+  background-color: #f0ede8;
+  border-radius: 24px;
+}
+.pin-item.empty{ background: #f0ede8; }
+.pin-1{ grid-column: 1; grid-row: 1; }
+.pin-2{ grid-column: 2; grid-row: 1 / 3; }
+.pin-3{ grid-column: 3 / 5; grid-row: 1; }
+.pin-4{ grid-column: 1; grid-row: 2 / 4; }
+.pin-5{ grid-column: 3; grid-row: 2 / 4; }
+.pin-6{ grid-column: 4; grid-row: 2 / 4; }
+.pin-7{ grid-column: 1; grid-row: 4 / 6; }
+.pin-8{ grid-column: 2; grid-row: 3 / 5; }
+.pin-9{ grid-column: 3; grid-row: 4 / 5; }
+.pin-10{ grid-column: 3 / 5; grid-row: 5 / 7; }
+.pin-11{ grid-column: 1; grid-row: 6 / 8; }
+
+/* ═══════════════════ ШАБЛОН 20 — ДРУЖБА СКВОЗЬ ГОДА ═══════════════════ */
+.friendship-page{
+  background: #000;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Times New Roman', Georgia, serif;
+}
+.fr-title{
+  position: absolute;
+  top: 20px; left: 50px;
+  font-size: 110px;
+  font-style: italic;
+  line-height: 1;
+  z-index: 5;
+}
+.fr-subtitle{
+  position: absolute;
+  top: 150px; right: 80px;
+  font-size: 82px;
+  font-style: italic;
+  font-weight: 700;
+  z-index: 5;
+}
+.fr-item{
+  position: absolute;
+  background-size: cover;
+  background-position: center;
+  background-color: #222;
+}
+.fr-item.empty{ background: #222; }
+.fr-i1{ left: 45px; top: 340px; width: 200px; height: 260px; }
+.fr-i2{ left: 45px; top: 660px; width: 200px; height: 260px; }
+.fr-i3{ left: 320px; top: 500px; width: 240px; height: 300px; }
+.fr-i4{ right: 45px; top: 340px; width: 200px; height: 260px; }
+.fr-i5{ right: 45px; top: 660px; width: 200px; height: 260px; }
+.fr-i6{ left: 50%; transform: translateX(-50%); bottom: 60px; width: 240px; height: 180px; }
+.fr-year{
+  position: absolute;
+  font-family: 'Great Vibes', cursive;
+  font-size: 58px;
+  color: #fff;
+  z-index: 5;
+}
+.fr-y1{ left: 60px; top: 620px; }
+.fr-y2{ left: 60px; top: 940px; }
+.fr-y3{ left: 360px; top: 820px; }
+.fr-y4{ right: 60px; top: 620px; }
+.fr-y5{ right: 60px; top: 940px; }
+.fr-y6{ left: 50%; transform: translateX(-50%); bottom: 30px; }
+.fr-y7{ left: 50%; transform: translateX(-50%); bottom: 200px; color: #fff; font-size: 66px; }
+
+/* ═══════════════════ МОБИЛЬНАЯ ВЕРСИЯ ═══════════════════ */
+@media (max-width: 768px){
+  .editor{
+    grid-template-columns: 1fr;
+    padding: 10px;
+    gap: 14px;
+  }
+  .sidebar{
+    position: static;
+    max-height: none;
+    padding: 10px;
+  }
+  .page-list{
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 6px;
+  }
+  .page-item{
+    flex-direction: column;
+    padding: 6px;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+  .page-num{ font-size: 12px; }
+  .page-thumb-mini{ width: 70px; height: 100px; }
+  .page-name{ font-size: 9px; max-width: 70px; }
+
+  .stage{ padding: 14px; }
+  .stage-preview{ max-width: 100%; }
+  .stage-actions{ flex-direction: column; width: 100%; }
+  .stage-actions .btn{ width: 100%; }
+
+  .form-panel{
+    position: static;
+    max-height: none;
+    padding: 14px;
+  }
+  .form-fields{ overflow: visible; }
+
+  .topbar{
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    gap: 10px;
+  }
+  .topbar-brand{ font-size: 16px; }
+  .topbar-info{ font-size: 10px; }
+  .topbar-actions{ margin-left: 0; width: 100%; justify-content: space-between; }
+  .topbar .btn{ padding: 9px 16px; font-size: 10px; }
+
+  .modal__inner{ max-height: 95vh; }
+  .modal__head{ padding: 14px 18px; }
+  .modal__title{ font-size: 18px; }
+  .gallery-grid{
+    grid-template-columns: repeat(2, 1fr);
+    padding: 14px;
+    gap: 12px;
+  }
+  .category-filter{ padding: 10px 14px; gap: 6px; }
+  .cat-chip{ padding: 6px 12px; font-size: 10px; }
+
+  .center-wrap h1{ font-size: 34px; }
+  .page-opt{ width: 84px; padding: 14px 6px; }
+  .page-opt b{ font-size: 22px; }
+}
