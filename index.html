@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOGUE — Создать журнал</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Petit+Formal+Script&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}html,body{height:100%}
+body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;background:radial-gradient(ellipse at 50% 40%,#1a1a1a 0%,#050505 70%)}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.03) 0,transparent 50%),radial-gradient(circle at 80% 70%,rgba(255,255,255,.02) 0,transparent 50%);pointer-events:none}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(4rem,14vw,12rem);letter-spacing:.15em;font-weight:400;text-shadow:0 0 80px rgba(255,255,255,.15);animation:fadeUp 1.4s cubic-bezier(.16,1,.3,1) both;margin-bottom:1rem}
+.hero-sub{font-family:'Petit Formal Script',cursive;font-size:clamp(1rem,2.5vw,1.8rem);color:rgba(255,255,255,.5);letter-spacing:.05em;animation:fadeUp 1.4s cubic-bezier(.16,1,.3,1) .2s both;margin-bottom:4rem}
+.btn-create{font-family:'Inter',sans-serif;font-size:1rem;letter-spacing:.25em;text-transform:uppercase;padding:1.2rem 3.5rem;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:60px;cursor:pointer;transition:all .6s cubic-bezier(.16,1,.3,1);animation:fadeUp 1.4s cubic-bezier(.16,1,.3,1) .4s both;position:relative;overflow:hidden;z-index:1}
+.btn-create::before{content:'';position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:right;transition:transform .6s cubic-bezier(.16,1,.3,1);z-index:-1}
+.btn-create:hover{color:#000;border-color:#fff}
+.btn-create:hover::before{transform:scaleX(1);transform-origin:left}
+.signature-ticker{position:absolute;bottom:6%;left:0;width:100%;overflow:hidden;white-space:nowrap;pointer-events:none;opacity:.35}
+.signature-ticker__inner{display:inline-block;animation:ticker 28s linear infinite;font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.2rem,2.5vw,2rem);letter-spacing:.3em;color:rgba(255,255,255,.6);padding-left:100%}
+.signature-ticker__inner span{margin-right:4rem}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.screen{min-height:100vh;display:none;flex-direction:column;padding:4rem 2rem;background:#0a0a0a}
+.screen.active{display:flex;animation:fadeUp .8s cubic-bezier(.16,1,.3,1) both}
+.screen-header{text-align:center;margin-bottom:3rem}
+.screen-header h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,3rem);font-weight:400;letter-spacing:.1em;margin-bottom:.8rem}
+.screen-header p{color:rgba(255,255,255,.4);font-size:.95rem;letter-spacing:.05em}
+.pages-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:1rem;max-width:900px;margin:0 auto;width:100%}
+.page-option{padding:1.8rem .5rem;text-align:center;border:1px solid rgba(255,255,255,.12);border-radius:16px;cursor:pointer;transition:all .5s cubic-bezier(.16,1,.3,1);background:rgba(255,255,255,.02)}
+.page-option:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.06);transform:translateY(-4px)}
+.page-option.selected{border-color:#fff;background:rgba(255,255,255,.1)}
+.page-option .num{font-family:'Playfair Display',serif;font-size:2rem;display:block;margin-bottom:.3rem}
+.page-option .label{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.templates-tabs{display:flex;justify-content:center;gap:.5rem;margin-bottom:2.5rem;flex-wrap:wrap}
+.tab{padding:.7rem 1.6rem;border-radius:40px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.6);cursor:pointer;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;transition:all .4s ease}
+.tab:hover{border-color:rgba(255,255,255,.5);color:#fff}
+.tab.active{background:#fff;color:#000;border-color:#fff}
+.templates-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto;width:100%}
+.template-card{border-radius:12px;overflow:hidden;background:#141414;border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:all .5s cubic-bezier(.16,1,.3,1);aspect-ratio:3/4;position:relative}
+.template-card:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.4);box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.template-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.16,1,.3,1)}
+.template-card:hover img{transform:scale(1.05)}
+.template-card .overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.8) 0,transparent 50%);display:flex;align-items:flex-end;padding:1rem;opacity:0;transition:opacity .4s ease}
+.template-card:hover .overlay{opacity:1}
+.template-card .overlay span{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase}
+.back-btn{margin:2.5rem auto 0;display:block;padding:.9rem 2.5rem;background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:40px;color:rgba(255,255,255,.6);cursor:pointer;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;transition:all .4s ease}
+.back-btn:hover{border-color:#fff;color:#fff}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:#0a0a0a}::-webkit-scrollbar-thumb{background:#333;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#555}
+</style>
+</head>
+<body>
+<section class="hero" id="hero">
+<h1 class="hero-title">VOGUE</h1>
+<p class="hero-sub">special edition</p>
+<button class="btn-create" onclick="goToSelect()">Создать журнал</button>
+<div class="signature-ticker"><div class="signature-ticker__inner">
+<span>Newerlelly technologies</span><span>Newerlelly technologies</span><span>Newerlelly technologies</span><span>Newerlelly technologies</span><span>Newerlelly technologies</span><span>Newerlelly technologies</span><span>Newerlelly technologies</span><span>Newerlelly technologies</span>
+</div></div>
+</section>
+<section class="screen" id="selectScreen">
+<div class="screen-header"><h2>Выберите количество страниц</h2><p>От 4 до 24 страниц</p></div>
+<div class="pages-grid" id="pagesGrid"></div>
+<button class="back-btn" onclick="goBack('hero')">← Назад</button>
+</section>
+<section class="screen" id="templatesScreen">
+<div class="screen-header"><h2>Галерея шаблонов</h2><p>Выберите страницы для вашего журнала</p></div>
+<div class="templates-tabs" id="tabs">
+<button class="tab active" data-cat="front">Обложки передние</button>
+<button class="tab" data-cat="back">Обложки задние</button>
+<button class="tab" data-cat="pages">Страницы</button>
+<button class="tab" data-cat="congrats">Поздравления</button>
+</div>
+<div class="templates-grid" id="templatesGrid"></div>
+<button class="back-btn" onclick="goBack('selectScreen')">← Назад</button>
+</section>
+<script>
+const pageOptions=[4,6,8,10,12,14,16,18,20,22,24];
+const templates={front:[{name:'VOGUE — BIRTHDAY',img:'https://placehold.co/600x800/111/fff?text=VOGUE'},{name:'VOGUE — ULIANA',img:'https://placehold.co/600x800/1a1a1a/fff?text=ULIANA'},{name:'VOGUE — Special',img:'https://placehold.co/600x800/222/fff?text=Special'}],back:[{name:'The end',img:'https://placehold.co/600x800/0a0a0a/fff?text=The+End'},{name:'Angels',img:'https://placehold.co/600x800/111/fff?text=Angels'},{name:'BIRTHDAY',img:'https://placehold.co/600x800/1a1a1a/fff?text=BIRTHDAY'}],pages:[{name:'Besties',img:'https://placehold.co/600x800/222/fff?text=BESTIES'},{name:'Memories',img:'https://placehold.co/600x800/1a1a1a/fff?text=MEMORIES'},{name:'Favourite',img:'https://placehold.co/600x800/111/fff?text=FAVOURITE'},{name:'Who that girl',img:'https://placehold.co/600x800/0a0a0a/fff?text=WHO'},{name:'Love',img:'https://placehold.co/600x800/1a1a1a/fff?text=LOVE'},{name:'Playlist',img:'https://placehold.co/600x800/222/fff?text=PLAYLIST'}],congrats:[{name:'От Насти',img:'https://placehold.co/600x800/111/fff?text=OT+НАСТИ'},{name:'Happy Birthday',img:'https://placehold.co/600x800/1a1a1a/fff?text=HAPPY'},{name:'8 фактов',img:'https://placehold.co/600x800/222/fff?text=8+ФАКТОВ'},{name:'Красной нитью',img:'https://placehold.co/600x800/0a0a0a/fff?text=НИТЬ'}]};
+let selectedPages=null;
+const pagesGrid=document.getElementById('pagesGrid');
+pageOptions.forEach(n=>{const d=document.createElement('div');d.className='page-option';d.innerHTML='<span class="num">'+n+'</span><span class="label">страниц</span>';d.onclick=()=>{document.querySelectorAll('.page-option').forEach(e=>e.classList.remove('selected'));d.classList.add('selected');selectedPages=n;setTimeout(()=>{document.getElementById('selectScreen').classList.remove('active');document.getElementById('templatesScreen').classList.add('active');renderTemplates('front');window.scrollTo(0,0)},400)};pagesGrid.appendChild(d)});
+const templatesGrid=document.getElementById('templatesGrid');
+function renderTemplates(c){templatesGrid.innerHTML='';templates[c].forEach(t=>{const card=document.createElement('div');card.className='template-card';card.innerHTML='<img src="'+t.img+'" alt="'+t.name+'" loading="lazy"><div class="overlay"><span>'+t.name+'</span></div>';card.onclick=()=>{card.style.borderColor='#fff';card.style.transform='scale(0.97)';setTimeout(()=>{card.style.transform=''},200)};templatesGrid.appendChild(card)})}
+document.getElementById('tabs').addEventListener('click',e=>{if(!e.target.classList.contains('tab'))return;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));e.target.classList.add('active');renderTemplates(e.target.dataset.cat)});
+function goToSelect(){document.getElementById('hero').style.display='none';document.getElementById('selectScreen').classList.add('active');window.scrollTo(0,0)}
+function goBack(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));if(id==='hero')document.getElementById('hero').style.display='flex';else document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+</script>
+</body>
+</html>
