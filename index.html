@@ -8,38 +8,97 @@
 </head>
 <body>
 
+<!-- ============ ЭКРАН 1: СТАРТ ============ -->
 <div id="screen-start" class="screen active">
-  <div class="start-box">
-    <h1 class="logo">VOGUE</h1>
-    <p class="start-sub">персональный журнал</p>
-    <p class="start-label">Сколько страниц?</p>
-    <div id="page-options" class="page-options"></div>
-    <button id="btn-start" class="btn-primary" disabled>Создать журнал</button>
+  <div class="start-hero">
+    <div class="start-left">
+      <div class="brand">
+        <div class="brand-line"></div>
+        <span class="brand-label">PERSONAL MAGAZINE</span>
+      </div>
+      <h1 class="hero-title">VOGUE</h1>
+      <p class="hero-sub">Создайте журнал, который расскажет вашу историю</p>
+
+      <div class="start-section">
+        <div class="section-label">Сколько страниц?</div>
+        <div id="page-options" class="page-options"></div>
+      </div>
+
+      <button id="btn-start" class="btn-primary btn-large" disabled>
+        <span>Создать журнал</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+
+      <div class="hint">
+        <span id="hint-text">Выберите количество страниц, чтобы продолжить</span>
+      </div>
+    </div>
+
+    <div class="start-right">
+      <div class="magazine-preview">
+        <div class="magazine-cover">
+          <div class="mc-title">VOGUE</div>
+          <div class="mc-sub">BIRTHDAY</div>
+          <div class="mc-line"></div>
+          <div class="mc-name">Your story</div>
+        </div>
+        <div class="magazine-shadow"></div>
+      </div>
+      <div class="float-badge badge-1">70+ шаблонов</div>
+      <div class="float-badge badge-2">PDF за 1 клик</div>
+    </div>
   </div>
 </div>
 
+<!-- ============ ЭКРАН 2: РЕДАКТОР ============ -->
 <div id="screen-editor" class="screen">
   <header class="editor-header">
-    <button id="btn-back" class="btn-ghost">← Назад</button>
-    <span id="page-counter" class="counter">0 / 0</span>
-    <button id="btn-pdf" class="btn-primary">Скачать PDF</button>
+    <button id="btn-back" class="btn-ghost">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Назад
+    </button>
+
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span class="progress-label">Прогресс</span>
+        <span id="page-counter" class="progress-count">0 / 0</span>
+      </div>
+      <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+    </div>
+
+    <button id="btn-pdf" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      Скачать PDF
+    </button>
   </header>
+
   <main class="editor-main">
     <aside id="page-list" class="page-list"></aside>
-    <section id="stage" class="stage">
+
+    <section class="stage">
       <div id="stage-page" class="stage-page"></div>
     </section>
+
     <aside id="form-fields" class="form-fields"></aside>
   </main>
 </div>
 
+<!-- ============ ГАЛЕРЕЯ ШАБЛОНОВ ============ -->
 <div id="gallery-modal" class="modal hidden">
   <div class="modal-inner">
     <header class="modal-header">
-      <h2>Выберите шаблон</h2>
-      <button id="modal-close" class="btn-ghost">✕</button>
+      <div>
+        <h2>Выберите шаблон</h2>
+        <p class="modal-sub" id="modal-sub">Все шаблоны</p>
+      </div>
+      <button id="modal-close" class="btn-close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
     </header>
-    <nav id="category-filter" class="category-filter"></nav>
+    <div class="modal-toolbar">
+      <nav id="category-filter" class="category-filter"></nav>
+      <input id="search-input" class="search-input" type="text" placeholder="Поиск шаблона...">
+    </div>
     <div id="gallery-grid" class="gallery-grid"></div>
   </div>
 </div>
