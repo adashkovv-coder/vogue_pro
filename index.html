@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vogue — персональный журнал</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div id="screen-start" class="screen active">
+  <div class="start-box">
+    <h1 class="logo">VOGUE</h1>
+    <p class="start-sub">персональный журнал</p>
+    <p class="start-label">Сколько страниц?</p>
+    <div id="page-options" class="page-options"></div>
+    <button id="btn-start" class="btn-primary" disabled>Создать журнал</button>
+  </div>
+</div>
+
+<div id="screen-editor" class="screen">
+  <header class="editor-header">
+    <button id="btn-back" class="btn-ghost">← Назад</button>
+    <span id="page-counter" class="counter">0 / 0</span>
+    <button id="btn-pdf" class="btn-primary">Скачать PDF</button>
+  </header>
+  <main class="editor-main">
+    <aside id="page-list" class="page-list"></aside>
+    <section id="stage" class="stage">
+      <div id="stage-page" class="stage-page"></div>
+    </section>
+    <aside id="form-fields" class="form-fields"></aside>
+  </main>
+</div>
+
+<div id="gallery-modal" class="modal hidden">
+  <div class="modal-inner">
+    <header class="modal-header">
+      <h2>Выберите шаблон</h2>
+      <button id="modal-close" class="btn-ghost">✕</button>
+    </header>
+    <nav id="category-filter" class="category-filter"></nav>
+    <div id="gallery-grid" class="gallery-grid"></div>
+  </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

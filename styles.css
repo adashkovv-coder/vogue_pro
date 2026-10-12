@@ -1,0 +1,68 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --bg:#faf8f5; --fg:#1a1a1a; --muted:#999; --line:#e5e0d8; --card:#f6f4f0; }
+
+@font-face { font-family:'ModernNo20'; src:url('fonts/ModernNo20.ttf') format('truetype'); font-display:swap; }
+@font-face { font-family:'PetitFormalScript'; src:url('fonts/PetitFormalScript.ttf') format('truetype'); font-display:swap; }
+
+body { font-family:-apple-system,'Helvetica Neue',Arial,sans-serif; background:var(--bg); color:var(--fg); min-height:100vh; }
+.screen { display:none; min-height:100vh; }
+.screen.active { display:block; }
+
+.start-box { max-width:560px; margin:10vh auto; padding:48px 40px; text-align:center; background:#fff; border-radius:16px; box-shadow:0 4px 40px rgba(0,0,0,.06); }
+.logo { font-family:'ModernNo20',Georgia,serif; font-size:72px; letter-spacing:10px; font-weight:400; margin-bottom:4px; }
+.start-sub { color:var(--muted); text-transform:uppercase; letter-spacing:4px; font-size:11px; margin-bottom:40px; }
+.start-label { text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:14px; }
+.page-options { display:grid; grid-template-columns:repeat(6,1fr); gap:8px; margin-bottom:32px; }
+.page-opt { padding:14px 0; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:15px; border-radius:8px; transition:all .15s; font-family:inherit; }
+.page-opt:hover { border-color:var(--fg); }
+.page-opt.active { background:var(--fg); color:#fff; border-color:var(--fg); }
+
+.btn-primary { padding:14px 32px; background:var(--fg); color:#fff; border:none; border-radius:8px; font-size:13px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; transition:opacity .15s; font-family:inherit; }
+.btn-primary:hover:not(:disabled) { opacity:.85; }
+.btn-primary:disabled { opacity:.3; cursor:not-allowed; }
+.btn-ghost { padding:8px 16px; background:none; border:1px solid var(--line); border-radius:6px; cursor:pointer; font-size:13px; font-family:inherit; }
+.btn-ghost:hover { border-color:var(--fg); }
+
+.editor-header { display:flex; align-items:center; justify-content:space-between; padding:14px 24px; border-bottom:1px solid var(--line); background:#fff; }
+.counter { font-size:12px; text-transform:uppercase; letter-spacing:2px; color:var(--muted); }
+.editor-main { display:grid; grid-template-columns:120px 1fr 340px; height:calc(100vh - 61px); }
+.page-list { border-right:1px solid var(--line); overflow-y:auto; padding:16px 8px; background:#fff; }
+.page-thumb { aspect-ratio:210/297; background:var(--card); border:2px solid transparent; border-radius:6px; margin-bottom:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--muted); text-align:center; padding:6px; transition:all .15s; overflow:hidden; position:relative; }
+.page-thumb.active { border-color:var(--fg); }
+.page-thumb:hover { background:#eeebe5; }
+.page-thumb__num { position:absolute; top:4px; left:6px; font-size:10px; font-weight:bold; color:var(--fg); }
+.page-thumb.filled { background:#f0ede8; color:var(--fg); }
+
+.stage { display:flex; align-items:flex-start; justify-content:center; overflow:auto; padding:40px; background:#f0ede8; }
+.stage-page { width:794px; height:1123px; background:#fff; box-shadow:0 4px 40px rgba(0,0,0,.12); flex-shrink:0; overflow:hidden; position:relative; }
+
+.form-fields { border-left:1px solid var(--line); overflow-y:auto; padding:20px; background:#fff; }
+.empty-msg { color:var(--muted); font-size:13px; text-align:center; margin-top:40px; line-height:1.6; }
+.field-group { margin-bottom:16px; }
+.field-group label { display:block; font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--muted); margin-bottom:6px; }
+.field-group input[type=text], .field-group textarea { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:6px; font-family:inherit; font-size:14px; resize:vertical; transition:border-color .15s; }
+.field-group input[type=text]:focus, .field-group textarea:focus { outline:none; border-color:var(--fg); }
+.field-group input[type=file] { width:100%; font-size:12px; }
+.field-group img.thumb { margin-top:8px; max-width:100%; max-height:120px; border-radius:6px; display:block; }
+
+.modal { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100; display:flex; align-items:center; justify-content:center; }
+.modal.hidden { display:none; }
+.modal-inner { background:#fff; width:92vw; max-width:1200px; height:88vh; border-radius:12px; display:flex; flex-direction:column; overflow:hidden; }
+.modal-header { display:flex; justify-content:space-between; align-items:center; padding:20px 24px; border-bottom:1px solid var(--line); }
+.modal-header h2 { font-family:'ModernNo20',Georgia,serif; font-size:24px; font-weight:400; letter-spacing:2px; }
+.category-filter { display:flex; gap:8px; padding:14px 24px; border-bottom:1px solid var(--line); overflow-x:auto; }
+.cat-btn { padding:6px 14px; border:1px solid var(--line); background:#fff; border-radius:20px; cursor:pointer; font-size:13px; white-space:nowrap; font-family:inherit; transition:all .15s; }
+.cat-btn.active { background:var(--fg); color:#fff; border-color:var(--fg); }
+
+.gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; padding:20px 24px; overflow-y:auto; }
+.gallery-item { cursor:pointer; border-radius:8px; overflow:hidden; border:2px solid transparent; transition:all .15s; position:relative; background:#fff; }
+.gallery-item:hover { border-color:var(--fg); }
+.gallery-item.chosen { border-color:var(--fg); }
+.gallery-item__badge { position:absolute; top:8px; right:8px; background:var(--fg); color:#fff; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:bold; z-index:2; }
+.gallery-item__preview { aspect-ratio:210/297; background:var(--card); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.gallery-item__preview img { width:100%; height:100%; object-fit:cover; }
+.gallery-item__placeholder { font-family:'ModernNo20',Georgia,serif; font-size:16px; color:var(--muted); text-align:center; padding:12px; letter-spacing:1px; }
+.gallery-item__name { padding:10px 12px 2px; font-size:13px; font-weight:500; }
+.gallery-item__cat { padding:0 12px 10px; font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; }
+
+.stage-page .tpl { width:794px; height:1123px; position:relative; overflow:hidden; background:#fff; }
